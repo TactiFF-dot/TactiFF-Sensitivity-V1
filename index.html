@@ -1783,12 +1783,33 @@ function validateDevice(){
 
   }
 
-  S.device=found;
+  S.device = found;
 
-  /* Auto-suggest known hardware values */
-  if(found.ram) ramEl.value=String(found.ram);
+/* Auto-fill known hardware values */
+if(found.ram){
+  ramEl.value = String(found.ram);
+}
 
-  S.refresh=found.refresh;
+if(found.refresh){
+  S.refresh = Number(found.refresh);
+
+  document.querySelectorAll("#refresh .option").forEach(x=>{
+    x.classList.toggle(
+      "active",
+      Number(x.dataset.value) === Number(found.refresh)
+    );
+  });
+}
+
+/* Keep device profile touch value */
+if(found.touch){
+  S.touch = Number(found.touch);
+
+  if(touchEl){
+    touchEl.value = String(found.touch);
+    touchValEl.textContent = String(found.touch);
+  }
+}
 
   document.querySelectorAll("#refresh .option").forEach(x=>{
     x.classList.toggle("active",Number(x.dataset.value)===found.refresh);
