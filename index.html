@@ -1803,6 +1803,9 @@ const brandEl = document.getElementById("brand");
 const deviceEl = document.getElementById("device");
 const ramEl = document.getElementById("ram");
 const ageEl = document.getElementById("age");
+  ageEl.addEventListener("change",()=>{
+  S.age = Number(ageEl.value);
+});
 const deviceStatusEl = document.getElementById("deviceStatus");
 const suggestionsEl = document.getElementById("suggestions");
 const continue1El = document.getElementById("continue1");
