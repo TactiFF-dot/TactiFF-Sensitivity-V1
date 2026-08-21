@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tactiff-dot.github.io/TactiFF-Sensitivity-V1/sitemap.xml
