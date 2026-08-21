@@ -1675,16 +1675,33 @@ function showToast(message){
 
 function findDevice(model){
 
-  const clean=normalize(model);
+  const clean = normalize(model);
 
   if(!clean) return null;
 
-  return devices.find(d =>
+  const matches = devices.filter(d =>
     d.aliases.some(alias=>{
-      const a=normalize(alias);
-      return clean===a || clean.includes(a) || a.includes(clean);
+      const a = normalize(alias);
+      return clean === a || clean.includes(a) || a.includes(clean);
     })
-  ) || null;
+  );
+
+  if(!matches.length) return null;
+
+  /*
+    अगर user ने RAM पहले से चुनी है,
+    तो उसी RAM वाला device profile prefer करें.
+    इससे 3GB / 4GB / 6GB / 8GB / 12GB variants
+    अलग-अलग profile इस्तेमाल कर सकेंगे.
+  */
+  const selectedRam = Number(ramEl.value);
+
+  if(selectedRam){
+    const ramMatch = matches.find(d => Number(d.ram) === selectedRam);
+    if(ramMatch) return ramMatch;
+  }
+
+  return matches[0];
 }
 
 function brandCompatible(selected,foundBrand){
