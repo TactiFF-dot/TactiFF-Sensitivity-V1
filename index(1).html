@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+  <meta name="google-site-verification" content="iUt9jRLz1NQspD8tT5zFJOo_Oyp8ZloJqczCnmPj2VE">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#060910">
+
+  <meta name="description" content="TactiFF is a free sensitivity generator and calibration tool that helps gamers find personalized sensitivity settings for smoother and more accurate gameplay.">
+
+  <title>TactiFF Sensitivity Generator – Free Gaming Sensitivity Tool</title>
+
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#060910;
+  --card:#0d1420;
+  --line:#1d2a3d;
+  --text:#f4f8ff;
+  --muted:#8d9aae;
+  --cyan:#00e5ff;
+  --purple:#7657ff;
+  --green:#38e58b;
+  --yellow:#ffd166;
+  --red:#ff5d70;
+}
+
+body{
+  font-family:Inter,Arial,sans-serif;
+  background:radial-gradient(circle at 50% -10%,#172d4c 0,#09111d 38%,#060910 72%);
+  color:var(--text);
+  min-height:100vh;
+}
+
+.app{
+  width:min(680px,94%);
+  margin:auto;
+  padding:22px 0 45px;
+}
+
+.header{text-align:center;margin:10px 0 22px}
+
+.logo{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.logo img{
+  width:150px;
+  height:auto;
+  max-width:70%;
+  display:block;
+}
+
+.tagline{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:7px;
+}
+
+.progressInfo{
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:11px;
+  margin-bottom:7px;
+}
+
+.progress{
+  height:6px;
+  background:#131c2a;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progressBar{
+  height:100%;
+  width:25%;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  transition:.3s;
+}
+
+.step{display:none}
+.step.active{display:block}
+
+.card{
+  background:rgba(13,20,32,.96);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:19px;
+  margin-bottom:14px;
+  box-shadow:0 18px 45px rgba(0,0,0,.2);
+}
+
+.cardTitle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:7px;
+}
+
+.cardTitle h2{
+  font-size:19px;
+  font-weight:800;
+}
+
+.icon{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border-radius:11px;
+  background:rgba(0,229,255,.08);
+  border:1px solid rgba(0,229,255,.18);
+}
+
+.desc{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.55;
+  margin-bottom:17px;
+}
+
+label{
+  display:block;
+  color:#d7deea;
+  font-size:12px;
+  font-weight:700;
+  margin:14px 0 7px;
+}
+
+input,select{
+  width:100%;
+  border:1px solid #26354a;
+  background:#080f19;
+  color:white;
+  border-radius:12px;
+  padding:13px;
+  font:inherit;
+  font-size:13px;
+  outline:none;
+}
+
+input:focus,select:focus{
+  border-color:var(--cyan);
+  box-shadow:0 0 0 2px rgba(0,229,255,.08);
+}
+
+.deviceStatus{
+  display:none;
+  margin-top:8px;
+  padding:10px;
+  border-radius:10px;
+  background:rgba(56,229,139,.07);
+  border:1px solid rgba(56,229,139,.2);
+  color:#a8f5cb;
+  font-size:11px;
+  line-height:1.5;
+}
+
+.deviceStatus.warn{
+  background:rgba(255,209,102,.07);
+  border-color:rgba(255,209,102,.25);
+  color:#ffe6a1;
+}
+
+.deviceStatus.info{
+  background:rgba(0,229,255,.06);
+  border-color:rgba(0,229,255,.2);
+  color:#a9f7ff;
+}
+
+.suggestions{
+  display:none;
+  margin-top:7px;
+  background:#080f19;
+  border:1px solid #26354a;
+  border-radius:12px;
+  overflow:hidden;
+}
+
+.suggestion{
+  padding:11px 12px;
+  border-bottom:1px solid #182437;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.suggestion:last-child{border-bottom:0}
+.suggestion:hover{background:#101c2c}
+
+.options{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+}
+
+.option{
+  background:#080f19;
+  border:1px solid #26354a;
+  border-radius:11px;
+  padding:12px 8px;
+  text-align:center;
+  color:#aeb9ca;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.18s;
+}
+
+.option.active{
+  color:white;
+  border-color:var(--cyan);
+  background:rgba(0,229,255,.08);
+  box-shadow:0 0 0 1px rgba(0,229,255,.08);
+}
+
+.slider{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.slider input{
+  padding:0;
+  border:0;
+  box-shadow:none;
+  accent-color:var(--cyan);
+}
+
+.sliderValue{
+  min-width:48px;
+  text-align:center;
+  padding:8px 5px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.btn{
+  width:100%;
+  margin-top:17px;
+  padding:14px;
+  border:0;
+  border-radius:13px;
+  background:linear-gradient(135deg,var(--cyan),#61f3ff);
+  color:#031017;
+  font-weight:900;
+  font-size:13px;
+  cursor:pointer;
+}
+
+.btn.secondary{
+  background:#121c2b;
+  border:1px solid #26354a;
+  color:white;
+}
+
+.btn:active{transform:scale(.985)}
+
+.btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.resultHeader{text-align:center}
+
+.resultHeader h2{
+  font-size:21px;
+  margin-bottom:6px;
+}
+
+.resultHeader p{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.score{
+  width:120px;
+  height:120px;
+  margin:18px auto;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  border:6px solid var(--cyan);
+  box-shadow:0 0 35px rgba(0,229,255,.12);
+}
+
+.score strong{
+  display:block;
+  font-size:34px;
+}
+
+.score small{
+  color:var(--muted);
+  font-size:9px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:9px;
+}
+
+.sensi{
+  background:#080f19;
+  border:1px solid #202f43;
+  border-radius:13px;
+  padding:14px;
+}
+
+.sensi span{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-bottom:5px;
+}
+
+.sensi strong{
+  font-size:24px;
+  color:var(--cyan);
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.stat{
+  background:#080f19;
+  border:1px solid #202f43;
+  border-radius:12px;
+  padding:12px 5px;
+  text-align:center;
+}
+
+.stat strong{
+  display:block;
+  font-size:19px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:9px;
+}
+
+.recommendation{
+  padding:11px;
+  margin-top:8px;
+  background:#091421;
+  border-left:3px solid var(--cyan);
+  border-radius:0 9px 9px 0;
+  font-size:11px;
+  line-height:1.5;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:7px;
+  background:rgba(56,229,139,.08);
+  color:var(--green);
+  font-size:10px;
+  font-weight:800;
+  margin-top:8px;
+}
+
+.hidden{display:none!important}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%) translateY(20px);
+  opacity:0;
+  pointer-events:none;
+  background:#101c2b;
+  border:1px solid #26354a;
+  color:#fff;
+  padding:11px 14px;
+  border-radius:11px;
+  font-size:11px;
+  transition:.25s;
+  z-index:20;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+@media(max-width:420px){
+  .app{width:92%}
+  .logo{font-size:30px}
+  .card{padding:16px}
+}
+
+/* =========================================================
+   DRAG CALIBRATION
+========================================================= */
+.calibrationProgress{
+  height:4px;
+  margin-top:8px;
+  background:#172334;
+  border-radius:99px;
+  overflow:hidden;
+}
+.calibrationProgress i{
+  display:block;
+  width:0%;
+  height:100%;
+  background:var(--cyan);
+  transition:width .25s ease;
+}
+
+.calibrationBox{
+  margin-top:14px;
+  padding:14px;
+  background:#080f19;
+  border:1px solid #202f43;
+  border-radius:14px;
+}
+.calibrationHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+}
+.calibrationHeader strong{font-size:13px}
+.calibrationHeader span{font-size:10px;color:var(--muted)}
+.dragTrack{
+  position:relative;
+  height:170px;
+  margin-top:12px;
+  border:1px dashed #31445e;
+  border-radius:12px;
+  background:radial-gradient(circle at 50% 50%,rgba(0,229,255,.07),transparent 60%);
+  overflow:hidden;
+  touch-action:none;
+  user-select:none;
+}
+.dragTarget{
+  position:absolute;
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  border:2px solid var(--cyan);
+  background:rgba(0,229,255,.10);
+  box-shadow:0 0 24px rgba(0,229,255,.13);
+  font-size:11px;
+  font-weight:900;
+}
+.dragStart{
+  position:absolute;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  width:78px;
+  height:40px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  border:1px solid #354b66;
+  color:#c9d5e5;
+  font-size:10px;
+  font-weight:800;
+  background:#0c1522;
+}
+.dragLine{
+  position:absolute;
+  left:50%;
+  top:75px;
+  bottom:58px;
+  width:2px;
+  transform:translateX(-50%);
+  background:linear-gradient(var(--cyan),transparent);
+  opacity:.5;
+}
+.dragReadout{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-top:9px;
+}
+.dragMetric{
+  padding:9px 4px;
+  border:1px solid #202f43;
+  border-radius:9px;
+  text-align:center;
+}
+.dragMetric strong{display:block;font-size:16px}
+.dragMetric span{font-size:8px;color:var(--muted)}
+.calibrationHint{
+  margin-top:9px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.5;
+}
+.calibrationResult{
+  margin-top:9px;
+  padding:10px;
+  border-left:3px solid var(--green);
+  border-radius:0 9px 9px 0;
+  background:#091421;
+  font-size:10px;
+  line-height:1.5;
+}
+
+
+/* =========================================================
+   V3 SAVE PROFILE + AIM TEST
+========================================================= */
+.proTools{
+  margin-top:14px;
+  display:grid;
+  gap:10px;
+}
+.proToolsRow{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.proPanel{
+  padding:13px;
+  background:#080f19;
+  border:1px solid #202f43;
+  border-radius:14px;
+}
+.proPanelTitle{
+  font-size:12px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+.proPanelSub{
+  color:var(--muted);
+  font-size:9px;
+  line-height:1.45;
+  margin-bottom:9px;
+}
+.profileStatus{
+  padding:8px 10px;
+  border-radius:9px;
+  background:#091421;
+  color:#aebed0;
+  font-size:9px;
+}
+.aimCanvas{
+  position:relative;
+  height:230px;
+  overflow:hidden;
+  border:1px dashed #31445e;
+  border-radius:12px;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(0,229,255,.06),transparent 52%),
+    #070d16;
+  touch-action:none;
+  user-select:none;
+}
+.aimTarget{
+  position:absolute;
+  width:42px;
+  height:42px;
+  border:2px solid var(--cyan);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 18px rgba(0,229,255,.18);
+  font-size:8px;
+  font-weight:900;
+}
+.aimCross{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:28px;
+  height:28px;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.aimCross:before,.aimCross:after{
+  content:"";
+  position:absolute;
+  background:#dbe9f7;
+  opacity:.75;
+}
+.aimCross:before{width:28px;height:1px;left:0;top:14px}
+.aimCross:after{width:1px;height:28px;left:14px;top:0}
+.aimStats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px;
+  margin-top:8px;
+}
+.aimMetric{
+  padding:8px 3px;
+  border:1px solid #202f43;
+  border-radius:8px;
+  text-align:center;
+}
+.aimMetric strong{display:block;font-size:14px}
+.aimMetric span{font-size:7px;color:var(--muted)}
+
+</style>
+<style id="tactiff-pro-upgrade-css">
+:root{--pro-bg:#05070b;--pro-panel:rgba(12,18,28,.82);--pro-border:rgba(105,225,255,.14);--pro-cyan:#54eaff;--pro-blue:#5b7cff;--pro-text:#edf7ff;--pro-muted:#8da1b7}
+*{scroll-behavior:smooth}.pro-site{background:radial-gradient(circle at 80% 0%,rgba(84,234,255,.10),transparent 32%),linear-gradient(180deg,#05070b 0%,#070b12 55%,#05070b 100%);color:var(--pro-text);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}.pro-nav{position:sticky;top:0;z-index:9999;backdrop-filter:blur(18px);background:rgba(5,7,11,.86);border-bottom:1px solid var(--pro-border)}.pro-nav-inner{max-width:1180px;margin:auto;padding:13px 18px;display:flex;align-items:center;gap:18px}.pro-brand{font-weight:1000;font-size:22px;letter-spacing:.5px;color:#fff;text-decoration:none}.pro-brand span{color:var(--pro-cyan)}.pro-menu{display:flex;gap:6px;margin-left:auto;align-items:center}.pro-menu a{color:#b9c8d8;text-decoration:none;padding:9px 11px;border-radius:10px;font-size:13px;font-weight:800}.pro-menu a:hover{background:rgba(84,234,255,.08);color:#fff}.pro-menu-btn{display:none;margin-left:auto;background:#0b121c;border:1px solid #223246;color:#fff;border-radius:10px;padding:9px 12px;font-size:18px}.pro-hero{max-width:1180px;margin:auto;padding:72px 18px 45px;display:grid;grid-template-columns:1.25fr .75fr;gap:28px;align-items:center}.pro-kicker{color:var(--pro-cyan);font-weight:1000;font-size:12px;letter-spacing:2px}.pro-hero h1{font-size:clamp(38px,6vw,70px);line-height:.98;margin:12px 0 18px;letter-spacing:-2px}.pro-hero h1 span{background:linear-gradient(90deg,#fff,var(--pro-cyan));-webkit-background-clip:text;background-clip:text;color:transparent}.pro-hero p{color:#9fb0c2;max-width:650px;font-size:16px;line-height:1.7}.pro-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}.pro-btn{border:1px solid #284054;background:#0b131e;color:#fff;padding:12px 17px;border-radius:11px;text-decoration:none;font-weight:900;cursor:pointer}.pro-btn.primary{background:linear-gradient(135deg,#21dff4,#4c7dff);border:0;color:#031017}.pro-hero-card{padding:22px;border:1px solid var(--pro-border);border-radius:22px;background:linear-gradient(180deg,rgba(14,24,38,.95),rgba(7,11,17,.95));box-shadow:0 20px 70px rgba(0,0,0,.35)}.pro-hero-card .stat{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid #172433}.pro-hero-card .stat:last-child{border:0}.pro-hero-card b{color:var(--pro-cyan)}.pro-section{max-width:1180px;margin:auto;padding:48px 18px}.pro-section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:20px}.pro-section-head h2{font-size:30px;margin:0}.pro-section-head p{color:var(--pro-muted);margin:5px 0 0}.pro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.pro-card{background:var(--pro-panel);border:1px solid var(--pro-border);border-radius:17px;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.18)}.pro-card h3{margin:8px 0;font-size:18px}.pro-card p{color:#91a3b6;line-height:1.55;font-size:13px}.pro-icon{font-size:25px}.pro-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.pro-pill{padding:7px 9px;border-radius:999px;background:#0b1420;border:1px solid #1d3042;color:#b9d2e5;font-size:11px;font-weight:800}.tool-panel{margin-top:18px}.tool-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.tool-tab{cursor:pointer;border:1px solid #26384b;background:#0a111a;color:#a9bacb;border-radius:9px;padding:9px 12px;font-weight:900}.tool-tab.active{background:#10303a;color:#7cf2ff;border-color:#2a8490}.tool-result{padding:15px;border-radius:12px;background:#060b12;border:1px dashed #2b4358;line-height:1.7}.copy-small{float:right;border:0;border-radius:8px;padding:7px 10px;background:#132638;color:#8fefff;cursor:pointer;font-weight:900}.name-input{width:100%;box-sizing:border-box;padding:13px;border-radius:10px;background:#070d15;border:1px solid #26384b;color:#fff;outline:none}.name-output{margin-top:12px;display:grid;gap:8px}.name-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px;border-radius:10px;background:#09121c;border:1px solid #1b2d3d}.name-row code{font-size:15px;color:#dffaff}.pro-footer{border-top:1px solid var(--pro-border);margin-top:30px;background:#03050a}.pro-footer-inner{max-width:1180px;margin:auto;padding:35px 18px;display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:25px}.pro-footer h3{margin:0 0 10px}.pro-footer a{display:block;color:#8ea5b9;text-decoration:none;margin:8px 0;font-size:13px}.pro-footer a:hover{color:#fff}.pro-footer p{color:#71869a;font-size:12px;line-height:1.6}.pro-hidden{display:none!important}
+@media(max-width:800px){.pro-menu-btn{display:block}.pro-menu{display:none;position:absolute;left:10px;right:10px;top:58px;background:#070c13;border:1px solid #203246;border-radius:14px;padding:8px;flex-direction:column;align-items:stretch}.pro-menu.open{display:flex}.pro-menu a{padding:12px}.pro-hero{grid-template-columns:1fr;padding-top:48px}.pro-grid{grid-template-columns:1fr}.pro-footer-inner{grid-template-columns:1fr 1fr}.pro-section{padding:38px 14px}.pro-hero h1{letter-spacing:-1px}.pro-nav-inner{padding:11px 14px}}
+@media(max-width:500px){.pro-footer-inner{grid-template-columns:1fr}.pro-section-head{display:block}.pro-actions .pro-btn{width:100%;text-align:center;box-sizing:border-box}}
+</style>
+</head>
+
+<body>
+<div class="pro-site" id="top">
+<nav class="pro-nav"><div class="pro-nav-inner"><a class="pro-brand" href="./index.html">Tacti<span>FF</span></a><button class="pro-menu-btn" id="proMenuBtn" aria-label="Open menu">☰</button><div class="pro-menu" id="proMenu"><a href="./index.html">Home</a><a href="./sensitivity.html">Sensitivity</a><a href="./gun-sensitivity.html">Gun Settings</a><a href="./hud.html">HUD</a><a href="./character-combos.html">Character Combos</a><a href="./stylish-names.html">Stylish Names</a><a href="./quick-tools.html">Quick Tools</a><a href="./resources.html">Resources</a></div></div></nav>
+<section class="pro-hero"><div><div class="pro-kicker">FREE FIRE SENSITIVITY GENERATOR • TACTIFF</div><h1>Your <span>main sensitivity engine.</span></h1><p>Generate a personalized setup using your device, RAM, refresh rate, touch response, playstyle and drag calibration. Everything else is available from the menu.</p><div class="pro-actions"><a class="pro-btn primary" href="#step1">🎯 Start Sensitivity Generator</a><a class="pro-btn" href="./quick-tools.html">🧰 Quick Tools</a></div></div><div class="pro-hero-card"><div class="stat"><span>🎯 Smart Generator</span><b>Device + RAM</b></div><div class="stat"><span>👆 Drag Calibration</span><b>3-Test Average</b></div><div class="stat"><span>🎯 Aim Test</span><b>Reaction + Accuracy</b></div><div class="stat"><span>💾 Profile</span><b>Save / Load</b></div><div class="stat"><span>⚡ More Tools</span><b>Separate Pages</b></div></div></section>
+
+<script id="tactiff-pro-upgrade-js">
+(function(){
+ const btn=document.getElementById('proMenuBtn'),menu=document.getElementById('proMenu');
+ btn?.addEventListener('click',()=>menu.classList.toggle('open')); menu?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>menu.classList.remove('open')));
+ const input=document.getElementById('styleNameInput'),out=document.getElementById('styleNameOutput');
+ const styles=[n=>'亗 '+n+' 亗',n=>'『 '+n+' 』',n=>'么 '+n+' 么',n=>'꧁༺ '+n+' ༻꧂',n=>'乂 '+n+' 乂',n=>'★彡 '+n+' 彡★',n=>'×͜× '+n, n=>'꧁'+n+'꧂'];
+ function renderNames(){const n=(input.value||'TactiFF').trim().slice(0,20)||'TactiFF';out.innerHTML=styles.map((fn,i)=>{const v=fn(n);return '<div class="name-row"><code>'+v.replace(/</g,'&lt;')+'</code><button class="copy-small" data-copy="'+encodeURIComponent(v)+'">COPY</button></div>'}).join('');}
+ input?.addEventListener('input',renderNames); out?.addEventListener('click',e=>{const b=e.target.closest('[data-copy]');if(!b)return;const text=decodeURIComponent(b.dataset.copy);navigator.clipboard?.writeText(text).then(()=>{b.textContent='COPIED';setTimeout(()=>b.textContent='COPY',900)}).catch(()=>{});});renderNames();
+})();
+</script>
+
+<main class="app" id="generator">
+
+<header class="header">
+  <div class="logo">
+  <img src="logo.png" alt="TactiFF Logo">
+</div>
+  <div class="tagline">SMART SENSITIVITY ENGINE • V4</div>
+</header>
+
+<div class="progressInfo">
+  <span id="stepLabel">Device Analysis</span>
+  <span id="percent">25%</span>
+</div>
+
+<div class="progress">
+  <div class="progressBar" id="bar"></div>
+</div>
+
+<br>
+
+<!-- STEP 1 -->
+<section class="step active" id="step1">
+<div class="card">
+
+<div class="cardTitle">
+  <div class="icon">📱</div>
+  <h2>Device Analysis</h2>
+</div>
+
+<p class="desc">
+TactiFF checks the selected brand and model against an expanded device database before using a tuning profile.
+The database now covers 60+ popular models. If a model is unavailable, a generic profile is used honestly.
+</p>
+
+<label>Brand</label>
+
+<select id="brand">
+<option value="">Select Brand</option>
+<option value="samsung">Samsung</option>
+<option value="xiaomi">Xiaomi</option>
+<option value="redmi">Redmi</option>
+<option value="poco">POCO</option>
+<option value="realme">Realme</option>
+<option value="oneplus">OnePlus</option>
+<option value="vivo">Vivo</option>
+<option value="oppo">Oppo</option>
+<option value="iqoo">iQOO</option>
+<option value="motorola">Motorola</option>
+<option value="infinix">Infinix</option>
+<option value="tecno">Tecno</option>
+<option value="lava">Lava</option>
+<option value="apple">Apple</option>
+<option value="other">Other</option>
+</select>
+
+<label>Device Model</label>
+
+<input id="device" placeholder="Example: Redmi Note 13" autocomplete="off">
+<div class="suggestions" id="suggestions"></div>
+<div class="deviceStatus" id="deviceStatus"></div>
+
+<label>RAM</label>
+
+<select id="ram">
+<option value="3">3 GB</option>
+<option value="4">4 GB</option>
+<option value="6">6 GB</option>
+<option value="8" selected>8 GB</option>
+<option value="12">12 GB+</option>
+</select>
+
+<label>Device Age</label>
+
+<select id="age">
+<option value="0">Less than 6 months</option>
+<option value="1">6 - 12 months</option>
+<option value="2">1 - 2 years</option>
+<option value="3">2 - 3 years</option>
+<option value="4">3+ years</option>
+</select>
+
+<label>Refresh Rate</label>
+
+<div class="options" id="refresh">
+<div class="option" data-value="60">60 Hz</div>
+<div class="option active" data-value="90">90 Hz</div>
+<div class="option" data-value="120">120 Hz</div>
+<div class="option" data-value="144">144 Hz+</div>
+</div>
+
+<button class="btn" id="continue1" onclick="goToPlayer()">Continue →</button>
+
+</div>
+</section>
+
+
+<!-- STEP 2 -->
+<section class="step" id="step2">
+<div class="card">
+
+<div class="cardTitle">
+<div class="icon">🎮</div>
+<h2>Player Profile</h2>
+</div>
+
+<p class="desc">
+Your sensitivity also depends on movement, drag behaviour and aiming style.
+</p>
+
+<label>Finger Setup</label>
+
+<div class="options" id="fingers">
+<div class="option" data-value="2">2 Finger</div>
+<div class="option active" data-value="3">3 Finger</div>
+<div class="option" data-value="4">4 Finger</div>
+</div>
+
+<label>Playstyle</label>
+
+<div class="options" id="style">
+<div class="option active" data-value="rusher">⚡ Rusher</div>
+<div class="option" data-value="balanced">🎯 Balanced</div>
+<div class="option" data-value="sniper">🔭 Sniper</div>
+<div class="option" data-value="support">🛡 Support</div>
+</div>
+
+<label>Drag Speed</label>
+
+<div class="slider">
+<input id="drag" type="range" min="1" max="100" value="70">
+<div class="sliderValue" id="dragVal">70</div>
+</div>
+
+<label>Drag Distance</label>
+
+<div class="options" id="distance">
+<div class="option" data-value="short">Short</div>
+<div class="option active" data-value="medium">Medium</div>
+<div class="option" data-value="long">Long</div>
+</div>
+
+<div class="calibrationBox">
+  <div class="calibrationHeader">
+    <strong>🎯 Drag Calibration</strong>
+    <span>Real touch-drag test</span>
+  </div>
+  <p class="calibrationHint">
+    Press the lower area and drag upward to the target. TactiFF measures your actual
+    drag distance and speed, then uses the result to fine-tune the generated profile.
+  </p>
+
+  <div class="dragTrack" id="dragTrack">
+    <div class="dragTarget">TARGET</div>
+    <div class="dragLine"></div>
+    <div class="dragStart">DRAG FROM HERE</div>
+  </div>
+
+  <div class="dragReadout">
+    <div class="dragMetric"><strong id="calDistance">0</strong><span>DISTANCE PX</span></div>
+    <div class="dragMetric"><strong id="calTime">0</strong><span>TIME MS</span></div>
+    <div class="dragMetric"><strong id="calSpeed">0</strong><span>PX/SEC</span></div>
+  </div>
+
+  <div class="calibrationResult" id="calResult">
+    No calibration yet. Complete one upward drag.
+  </div>
+  <div class="calibrationResult" id="calStats">
+    Tests: <b>0/3</b> • Average: — • Consistency: —
+  </div>
+  <div class="calibrationProgress"><i id="calProgress"></i></div>
+
+
+  <button class="btn secondary" id="calReset" type="button">↺ Reset Calibration</button>
+</div>
+<div class="proTools">
+  <div class="proPanel">
+    <div class="proPanelTitle">💾 Save / Load Profile</div>
+    <div class="proPanelSub">Save your generated + calibrated settings directly in this browser.</div>
+    <div class="proToolsRow">
+      <button class="btn secondary" id="saveProfile" type="button">💾 Save Profile</button>
+      <button class="btn secondary" id="loadProfile" type="button">↻ Load Profile</button>
+    </div>
+    <div class="profileStatus" id="profileStatus">No saved profile.</div>
+  </div>
+
+  <div class="proPanel">
+    <div class="proPanelTitle">🎯 Aim Test Mode</div>
+    <div class="proPanelSub">Tap the moving target. Your hit rate and reaction time are measured using the current profile.</div>
+    <div class="aimCanvas" id="aimCanvas">
+      <div class="aimCross"></div>
+      <div class="aimTarget" id="aimTarget">TAP</div>
+    </div>
+    <div class="aimStats">
+      <div class="aimMetric"><strong id="aimHits">0</strong><span>HITS</span></div>
+      <div class="aimMetric"><strong id="aimShots">0</strong><span>SHOTS</span></div>
+      <div class="aimMetric"><strong id="aimAccuracy">0%</strong><span>ACCURACY</span></div>
+      <div class="aimMetric"><strong id="aimReaction">—</strong><span>AVG MS</span></div>
+    </div>
+    <button class="btn secondary" id="aimReset" type="button" style="margin-top:8px">↺ Reset Aim Test</button>
+  </div>
+</div>
+
+
+<label>Aim Style</label>
+
+<div class="options" id="aim">
+<div class="option active" data-value="head">Head Focus</div>
+<div class="option" data-value="onetap">One Tap</div>
+<div class="option" data-value="stable">Stable</div>
+<div class="option" data-value="chest">Chest → Head</div>
+</div>
+
+<button class="btn" onclick="next(3)">Continue →</button>
+<button class="btn secondary" onclick="next(1)">← Back</button>
+
+</div>
+</section>
+
+
+<!-- STEP 3 -->
+<section class="step" id="step3">
+<div class="card">
+
+<div class="cardTitle">
+<div class="icon">⚙️</div>
+<h2>Touch & Performance</h2>
+</div>
+
+<p class="desc">
+These controls help TactiFF estimate responsiveness and stability.
+</p>
+
+<label>FPS Stability</label>
+
+<div class="options" id="fps">
+<div class="option" data-value="low">30-40 FPS</div>
+<div class="option" data-value="mid">45-60 FPS</div>
+<div class="option active" data-value="high">60-90 FPS</div>
+<div class="option" data-value="ultra">90+ FPS</div>
+</div>
+
+<label>Touch Response</label>
+
+<div class="slider">
+<input id="touch" type="range" min="1" max="100" value="75">
+<div class="sliderValue" id="touchVal">75</div>
+</div>
+
+<label>Fire Button</label>
+
+<div class="slider">
+<input id="fire" type="range" min="25" max="70" value="48">
+<div class="sliderValue" id="fireVal">48%</div>
+</div>
+
+<label>Gyroscope</label>
+
+<div class="options" id="gyro">
+<div class="option active" data-value="off">Off</div>
+<div class="option" data-value="on">On</div>
+</div>
+
+<button class="btn" onclick="generate()">⚡ GENERATE SENSITIVITY</button>
+<button class="btn secondary" onclick="next(2)">← Back</button>
+
+</div>
+</section>
+
+
+<!-- STEP 4 -->
+<section class="step" id="step4">
+
+<div class="card">
+<div class="resultHeader">
+<h2>🎯 Your TactiFF Profile</h2>
+<p id="profileName">Personalized starting profile</p>
+
+<div class="score">
+<div>
+<strong id="score">0</strong>
+<small>PROFILE SCORE</small>
+</div>
+</div>
+</div>
+
+<div class="grid">
+<div class="sensi"><span>GENERAL</span><strong id="general">0</strong></div>
+<div class="sensi"><span>RED DOT</span><strong id="red">0</strong></div>
+<div class="sensi"><span>2X SCOPE</span><strong id="two">0</strong></div>
+<div class="sensi"><span>4X SCOPE</span><strong id="four">0</strong></div>
+<div class="sensi"><span>SNIPER</span><strong id="sniper">0</strong></div>
+<div class="sensi"><span>FREE LOOK</span><strong id="free">0</strong></div>
+</div>
+
+<div class="badge" id="deviceBadge">DEVICE PROFILE</div>
+</div>
+
+<div class="card">
+<h3 style="margin-bottom:12px">📊 Analysis</h3>
+<div class="stats">
+<div class="stat"><strong id="aimScore">0</strong><span>AIM</span></div>
+<div class="stat"><strong id="dragScore">0</strong><span>DRAG</span></div>
+<div class="stat"><strong id="stableScore">0</strong><span>STABILITY</span></div>
+</div>
+</div>
+
+<div class="card">
+<h3>⚡ Recommended Setup</h3>
+<div class="recommendation" id="deviceTip"></div>
+<div class="recommendation" id="dpiTip"></div>
+<div class="recommendation" id="fireTip"></div>
+<div class="recommendation" id="dragTip"></div>
+<div class="recommendation" id="weaponTip"></div>
+</div>
+
+<div class="card">
+<h3 style="margin-bottom:7px">🧠 Smart Fine-Tune</h3>
+<p class="desc">
+Test the settings in training mode, then tell TactiFF what your aim is doing.
+</p>
+
+<div class="options">
+<div class="option" onclick="tune('up')">⬆ Aim Going Above</div>
+<div class="option" onclick="tune('down')">⬇ Stuck At Chest</div>
+<div class="option" onclick="tune('slow')">🐌 Drag Too Slow</div>
+<div class="option" onclick="tune('fast')">⚡ Drag Too Fast</div>
+</div>
+</div>
+
+<button class="btn" onclick="copyResult()">📋 COPY SETTINGS</button>
+<button class="btn secondary" onclick="restart()">🔄 GENERATE AGAIN</button>
+
+</section>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   TACTIFF V4 — CLEAN DEVICE + RAM ENGINE
+   - Device profiles are internal starting heuristics.
+   - No live hardware detection is claimed.
+   - RAM variants are handled per model.
+========================================================= */
+
+const devices = [
+  {
+    brand:"redmi"
+    ,aliases:["redmi note 13", "redmi note 13 5g"]
+    ,name:"Redmi Note 13"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:78,performance:84,base:178
+    ,profiles:[{"ram":8,"refresh":120,"touch":78,"performance":84,"base":178}]
+  },
+  {
+    brand:"redmi"
+    ,aliases:["redmi note 13 pro", "redmi note 13 pro 5g"]
+    ,name:"Redmi Note 13 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:82,performance:88,base:181
+    ,profiles:[{"ram":8,"refresh":120,"touch":82,"performance":88,"base":181}]
+  },
+  {
+    brand:"redmi"
+    ,aliases:["redmi note 13 pro plus", "redmi note 13 pro plus 5g"]
+    ,name:"Redmi Note 13 Pro+"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:86,performance:92,base:184
+    ,profiles:[{"ram":8,"refresh":120,"touch":86,"performance":92,"base":184}]
+  },
+  {
+    brand:"redmi"
+    ,aliases:["redmi note 12", "redmi note 12 5g"]
+    ,name:"Redmi Note 12"
+    ,rams:[6]
+    ,ram:6,refresh:120,touch:76,performance:80,base:175
+    ,profiles:[{"ram":6,"refresh":120,"touch":76,"performance":80,"base":175}]
+  },
+  {
+    brand:"redmi"
+    ,aliases:["redmi note 12 pro", "redmi note 12 pro 5g"]
+    ,name:"Redmi Note 12 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:80,performance:85,base:179
+    ,profiles:[{"ram":8,"refresh":120,"touch":80,"performance":85,"base":179}]
+  },
+  {
+    brand:"redmi"
+    ,aliases:["redmi note 11"]
+    ,name:"Redmi Note 11"
+    ,rams:[6]
+    ,ram:6,refresh:90,touch:72,performance:74,base:169
+    ,profiles:[{"ram":6,"refresh":90,"touch":72,"performance":74,"base":169}]
+  },
+  {
+    brand:"redmi"
+    ,aliases:["redmi note 11 pro plus", "redmi note 11 pro plus 5g"]
+    ,name:"Redmi Note 11 Pro+"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:80,performance:84,base:178
+    ,profiles:[{"ram":8,"refresh":120,"touch":80,"performance":84,"base":178}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco x6", "poco x6 5g"]
+    ,name:"POCO X6"
+    ,rams:[8, 12]
+    ,ram:8,refresh:120,touch:84,performance:91,base:182
+    ,profiles:[{"ram":8,"refresh":120,"touch":84,"performance":91,"base":182},{"ram":8,"refresh":120,"touch":88,"performance":91,"base":182},{"ram":12,"refresh":120,"touch":90,"performance":94,"base":186}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco x6 pro", "poco x6 pro 5g"]
+    ,name:"POCO X6 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:88,performance:96,base:187
+    ,profiles:[{"ram":8,"refresh":120,"touch":88,"performance":96,"base":187}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco x5 pro", "poco x5 pro 5g"]
+    ,name:"POCO X5 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:82,performance:88,base:180
+    ,profiles:[{"ram":8,"refresh":120,"touch":82,"performance":88,"base":180}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco x5", "poco x5 5g"]
+    ,name:"POCO X5"
+    ,rams:[6]
+    ,ram:6,refresh:120,touch:78,performance:82,base:176
+    ,profiles:[{"ram":6,"refresh":120,"touch":78,"performance":82,"base":176}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco f5", "poco f5 5g"]
+    ,name:"POCO F5"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:88,performance:94,base:185
+    ,profiles:[{"ram":8,"refresh":120,"touch":88,"performance":94,"base":185}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco f6", "poco f6 5g"]
+    ,name:"POCO F6"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:90,performance:97,base:189
+    ,profiles:[{"ram":8,"refresh":120,"touch":90,"performance":97,"base":189}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco m6 pro", "poco m6 pro 4g"]
+    ,name:"POCO M6 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:76,performance:80,base:174
+    ,profiles:[{"ram":8,"refresh":120,"touch":76,"performance":80,"base":174}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["realme 11 pro", "realme 11 pro 5g"]
+    ,name:"Realme 11 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:80,performance:86,base:179
+    ,profiles:[{"ram":8,"refresh":120,"touch":80,"performance":86,"base":179}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["realme 11 pro plus", "realme 11 pro plus 5g"]
+    ,name:"Realme 11 Pro+"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:84,performance:90,base:183
+    ,profiles:[{"ram":8,"refresh":120,"touch":84,"performance":90,"base":183}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["narzo 60", "realme narzo 60"]
+    ,name:"Realme Narzo 60"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:77,performance:82,base:176
+    ,profiles:[{"ram":8,"refresh":120,"touch":77,"performance":82,"base":176}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["narzo 60 pro", "realme narzo 60 pro"]
+    ,name:"Realme Narzo 60 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:82,performance:87,base:180
+    ,profiles:[{"ram":8,"refresh":120,"touch":82,"performance":87,"base":180}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["narzo 70", "realme narzo 70"]
+    ,name:"Realme Narzo 70"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:81,performance:86,base:179
+    ,profiles:[{"ram":8,"refresh":120,"touch":81,"performance":86,"base":179}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["narzo 70 pro", "realme narzo 70 pro"]
+    ,name:"Realme Narzo 70 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:85,performance:91,base:183
+    ,profiles:[{"ram":8,"refresh":120,"touch":85,"performance":91,"base":183}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["gt neo 3", "realme gt neo 3"]
+    ,name:"Realme GT Neo 3"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:87,performance:94,base:186
+    ,profiles:[{"ram":8,"refresh":120,"touch":87,"performance":94,"base":186}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["gt 6t", "realme gt 6t"]
+    ,name:"Realme GT 6T"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:90,performance:96,base:190
+    ,profiles:[{"ram":8,"refresh":120,"touch":90,"performance":96,"base":190}]
+  },
+  {
+    brand:"oneplus"
+    ,aliases:["nord 3", "oneplus nord 3"]
+    ,name:"OnePlus Nord 3"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:86,performance:94,base:184
+    ,profiles:[{"ram":8,"refresh":120,"touch":86,"performance":94,"base":184}]
+  },
+  {
+    brand:"oneplus"
+    ,aliases:["nord ce 3", "oneplus nord ce 3"]
+    ,name:"OnePlus Nord CE 3"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:81,performance:87,base:179
+    ,profiles:[{"ram":8,"refresh":120,"touch":81,"performance":87,"base":179}]
+  },
+  {
+    brand:"oneplus"
+    ,aliases:["nord ce 4", "oneplus nord ce 4"]
+    ,name:"OnePlus Nord CE 4"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:84,performance:91,base:182
+    ,profiles:[{"ram":8,"refresh":120,"touch":84,"performance":91,"base":182}]
+  },
+  {
+    brand:"oneplus"
+    ,aliases:["11r", "oneplus 11r"]
+    ,name:"OnePlus 11R"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:89,performance:95,base:188
+    ,profiles:[{"ram":8,"refresh":120,"touch":89,"performance":95,"base":188}]
+  },
+  {
+    brand:"oneplus"
+    ,aliases:["12r", "oneplus 12r"]
+    ,name:"OnePlus 12R"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:91,performance:97,base:191
+    ,profiles:[{"ram":8,"refresh":120,"touch":91,"performance":97,"base":191}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["a54", "galaxy a54", "samsung galaxy a54"]
+    ,name:"Samsung Galaxy A54"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:78,performance:83,base:177
+    ,profiles:[{"ram":8,"refresh":120,"touch":78,"performance":83,"base":177}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["a34", "galaxy a34", "samsung galaxy a34"]
+    ,name:"Samsung Galaxy A34"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:76,performance:80,base:174
+    ,profiles:[{"ram":8,"refresh":120,"touch":76,"performance":80,"base":174}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["galaxy m34", "m34", "samsung galaxy m34"]
+    ,name:"Samsung Galaxy M34"
+    ,rams:[6]
+    ,ram:6,refresh:120,touch:74,performance:78,base:172
+    ,profiles:[{"ram":6,"refresh":120,"touch":74,"performance":78,"base":172}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["f54", "galaxy f54", "samsung galaxy f54"]
+    ,name:"Samsung Galaxy F54"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:77,performance:82,base:176
+    ,profiles:[{"ram":8,"refresh":120,"touch":77,"performance":82,"base":176}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["galaxy s23", "s23", "samsung galaxy s23"]
+    ,name:"Samsung Galaxy S23"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:90,performance:95,base:188
+    ,profiles:[{"ram":8,"refresh":120,"touch":90,"performance":95,"base":188}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["galaxy s24", "s24", "samsung galaxy s24"]
+    ,name:"Samsung Galaxy S24"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:92,performance:97,base:191
+    ,profiles:[{"ram":8,"refresh":120,"touch":92,"performance":97,"base":191}]
+  },
+  {
+    brand:"vivo"
+    ,aliases:["t3x", "vivo t3x", "vivo t3x 5g"]
+    ,name:"Vivo T3x"
+    ,rams:[6]
+    ,ram:6,refresh:120,touch:78,performance:84,base:178
+    ,profiles:[{"ram":6,"refresh":120,"touch":78,"performance":84,"base":178}]
+  },
+  {
+    brand:"vivo"
+    ,aliases:["t3", "vivo t3", "vivo t3 5g"]
+    ,name:"Vivo T3"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:82,performance:89,base:181
+    ,profiles:[{"ram":8,"refresh":120,"touch":82,"performance":89,"base":181}]
+  },
+  {
+    brand:"vivo"
+    ,aliases:["t2x", "vivo t2x", "vivo t2x 5g"]
+    ,name:"Vivo T2x"
+    ,rams:[6]
+    ,ram:6,refresh:120,touch:75,performance:79,base:174
+    ,profiles:[{"ram":6,"refresh":120,"touch":75,"performance":79,"base":174}]
+  },
+  {
+    brand:"vivo"
+    ,aliases:["vivo v30", "vivo v30 5g"]
+    ,name:"Vivo V30"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:84,performance:90,base:183
+    ,profiles:[{"ram":8,"refresh":120,"touch":84,"performance":90,"base":183}]
+  },
+  {
+    brand:"vivo"
+    ,aliases:["vivo v40", "vivo v40 5g"]
+    ,name:"Vivo V40"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:87,performance:93,base:186
+    ,profiles:[{"ram":8,"refresh":120,"touch":87,"performance":93,"base":186}]
+  },
+  {
+    brand:"oppo"
+    ,aliases:["f25 pro", "oppo f25 pro", "oppo f25 pro 5g"]
+    ,name:"OPPO F25 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:81,performance:87,base:179
+    ,profiles:[{"ram":8,"refresh":120,"touch":81,"performance":87,"base":179}]
+  },
+  {
+    brand:"oppo"
+    ,aliases:["oppo f27", "oppo f27 5g"]
+    ,name:"OPPO F27"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:83,performance:89,base:181
+    ,profiles:[{"ram":8,"refresh":120,"touch":83,"performance":89,"base":181}]
+  },
+  {
+    brand:"oppo"
+    ,aliases:["oppo reno 11", "oppo reno 11 5g", "reno 11"]
+    ,name:"OPPO Reno 11"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:84,performance:90,base:183
+    ,profiles:[{"ram":8,"refresh":120,"touch":84,"performance":90,"base":183}]
+  },
+  {
+    brand:"oppo"
+    ,aliases:["oppo reno 12", "oppo reno 12 5g", "reno 12"]
+    ,name:"OPPO Reno 12"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:86,performance:92,base:185
+    ,profiles:[{"ram":8,"refresh":120,"touch":86,"performance":92,"base":185}]
+  },
+  {
+    brand:"iqoo"
+    ,aliases:["iqoo z9", "iqoo z9 5g", "z9"]
+    ,name:"iQOO Z9"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:86,performance:93,base:185
+    ,profiles:[{"ram":8,"refresh":120,"touch":86,"performance":93,"base":185}]
+  },
+  {
+    brand:"iqoo"
+    ,aliases:["iqoo z9x", "iqoo z9x 5g", "z9x"]
+    ,name:"iQOO Z9x"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:80,performance:87,base:180
+    ,profiles:[{"ram":8,"refresh":120,"touch":80,"performance":87,"base":180}]
+  },
+  {
+    brand:"iqoo"
+    ,aliases:["iqoo neo 9 pro", "neo 9 pro"]
+    ,name:"iQOO Neo 9 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:144,touch:92,performance:97,base:191
+    ,profiles:[{"ram":8,"refresh":144,"touch":92,"performance":97,"base":191}]
+  },
+  {
+    brand:"motorola"
+    ,aliases:["moto g64", "moto g64 5g", "motorola g64"]
+    ,name:"Motorola G64"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:79,performance:84,base:177
+    ,profiles:[{"ram":8,"refresh":120,"touch":79,"performance":84,"base":177}]
+  },
+  {
+    brand:"motorola"
+    ,aliases:["moto g54", "moto g54 5g", "motorola g54"]
+    ,name:"Motorola G54"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:76,performance:81,base:174
+    ,profiles:[{"ram":8,"refresh":120,"touch":76,"performance":81,"base":174}]
+  },
+  {
+    brand:"motorola"
+    ,aliases:["edge 50 fusion", "motorola edge 50 fusion"]
+    ,name:"Motorola Edge 50 Fusion"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:85,performance:91,base:184
+    ,profiles:[{"ram":8,"refresh":120,"touch":85,"performance":91,"base":184}]
+  },
+  {
+    brand:"infinix"
+    ,aliases:["infinix note 40", "note 40"]
+    ,name:"Infinix Note 40"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:80,performance:85,base:178
+    ,profiles:[{"ram":8,"refresh":120,"touch":80,"performance":85,"base":178}]
+  },
+  {
+    brand:"infinix"
+    ,aliases:["gt 20 pro", "infinix gt 20 pro"]
+    ,name:"Infinix GT 20 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:144,touch:88,performance:95,base:188
+    ,profiles:[{"ram":8,"refresh":144,"touch":88,"performance":95,"base":188}]
+  },
+  {
+    brand:"tecno"
+    ,aliases:["pova 6 pro", "tecno pova 6 pro"]
+    ,name:"Tecno Pova 6 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:84,performance:91,base:182
+    ,profiles:[{"ram":8,"refresh":120,"touch":84,"performance":91,"base":182}]
+  },
+  {
+    brand:"tecno"
+    ,aliases:["camon 30", "tecno camon 30"]
+    ,name:"Tecno Camon 30"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:80,performance:86,base:179
+    ,profiles:[{"ram":8,"refresh":120,"touch":80,"performance":86,"base":179}]
+  },
+  {
+    brand:"apple"
+    ,aliases:["iphone 13", "iphone13"]
+    ,name:"iPhone 13"
+    ,rams:[4]
+    ,ram:4,refresh:60,touch:92,performance:94,base:181
+    ,profiles:[{"ram":4,"refresh":60,"touch":92,"performance":94,"base":181}]
+  },
+  {
+    brand:"apple"
+    ,aliases:["iphone 13 pro", "iphone13 pro"]
+    ,name:"iPhone 13 Pro"
+    ,rams:[6]
+    ,ram:6,refresh:120,touch:94,performance:97,base:190
+    ,profiles:[{"ram":6,"refresh":120,"touch":94,"performance":97,"base":190}]
+  },
+  {
+    brand:"apple"
+    ,aliases:["iphone 14", "iphone14"]
+    ,name:"iPhone 14"
+    ,rams:[6]
+    ,ram:6,refresh:60,touch:94,performance:96,base:183
+    ,profiles:[{"ram":6,"refresh":60,"touch":94,"performance":96,"base":183}]
+  },
+  {
+    brand:"apple"
+    ,aliases:["iphone 15", "iphone15"]
+    ,name:"iPhone 15"
+    ,rams:[6]
+    ,ram:6,refresh:60,touch:95,performance:97,base:185
+    ,profiles:[{"ram":6,"refresh":60,"touch":95,"performance":97,"base":185}]
+  },
+  {
+    brand:"apple"
+    ,aliases:["iphone 15 pro", "iphone15 pro"]
+    ,name:"iPhone 15 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:96,performance:98,base:192
+    ,profiles:[{"ram":8,"refresh":120,"touch":96,"performance":98,"base":192}]
+  },
+  {
+    brand:"oppo"
+    ,aliases:["a31", "oppo a31"]
+    ,name:"OPPO A31"
+    ,rams:[4, 6]
+    ,ram:4,refresh:60,touch:60,performance:62,base:155
+    ,profiles:[{"ram":4,"refresh":60,"touch":60,"performance":62,"base":155},{"ram":6,"refresh":60,"touch":60,"performance":65,"base":158}]
+  },
+  {
+    brand:"oppo"
+    ,aliases:["a3x", "oppo a3x"]
+    ,name:"OPPO A3x"
+    ,rams:[4]
+    ,ram:4,refresh:90,touch:65,performance:68,base:164
+    ,profiles:[{"ram":4,"refresh":90,"touch":65,"performance":68,"base":164}]
+  },
+  {
+    brand:"oppo"
+    ,aliases:["a3x 5g", "oppo a3x 5g"]
+    ,name:"OPPO A3x 5G"
+    ,rams:[4]
+    ,ram:4,refresh:120,touch:70,performance:72,base:168
+    ,profiles:[{"ram":4,"refresh":120,"touch":70,"performance":72,"base":168}]
+  },
+  {
+    brand:"lava"
+    ,aliases:["lava z3 pro", "z3 pro"]
+    ,name:"LAVA Z3 Pro"
+    ,rams:[3]
+    ,ram:3,refresh:60,touch:55,performance:55,base:145
+    ,profiles:[{"ram":3,"refresh":60,"touch":55,"performance":55,"base":145}]
+  },
+  {
+    brand:"lava"
+    ,aliases:["lava o1", "o1"]
+    ,name:"LAVA O1"
+    ,rams:[4]
+    ,ram:4,refresh:90,touch:60,performance:62,base:155
+    ,profiles:[{"ram":4,"refresh":90,"touch":60,"performance":62,"base":155}]
+  },
+  {
+    brand:"lava"
+    ,aliases:["blaze nxt", "lava blaze nxt"]
+    ,name:"Lava Blaze NXT"
+    ,rams:[4]
+    ,ram:4,refresh:60,touch:58,performance:60,base:152
+    ,profiles:[{"ram":4,"refresh":60,"touch":58,"performance":60,"base":152}]
+  },
+  {
+    brand:"lava"
+    ,aliases:["blaze 2 5g", "lava blaze 2 5g"]
+    ,name:"Lava Blaze 2 5G"
+    ,rams:[4, 6]
+    ,ram:4,refresh:90,touch:68,performance:72,base:168
+    ,profiles:[{"ram":4,"refresh":90,"touch":68,"performance":72,"base":168},{"ram":6,"refresh":90,"touch":70,"performance":75,"base":171}]
+  },
+  {
+    brand:"lava"
+    ,aliases:["blaze x 5g", "lava blaze x 5g"]
+    ,name:"Lava Blaze X 5G"
+    ,rams:[4, 6, 8]
+    ,ram:4,refresh:120,touch:76,performance:80,base:176
+    ,profiles:[{"ram":4,"refresh":120,"touch":76,"performance":80,"base":176},{"ram":6,"refresh":120,"touch":78,"performance":83,"base":179},{"ram":8,"refresh":120,"touch":80,"performance":86,"base":182}]
+  },
+  {
+    brand:"lava"
+    ,aliases:["lava yuva 3", "yuva 3"]
+    ,name:"Lava Yuva 3"
+    ,rams:[4]
+    ,ram:4,refresh:90,touch:60,performance:64,base:157
+    ,profiles:[{"ram":4,"refresh":90,"touch":60,"performance":64,"base":157}]
+  },
+  {
+    brand:"lava"
+    ,aliases:["blaze pro", "lava blaze pro"]
+    ,name:"Lava Blaze Pro"
+    ,rams:[4]
+    ,ram:4,refresh:60,touch:58,performance:62,base:154
+    ,profiles:[{"ram":4,"refresh":60,"touch":58,"performance":62,"base":154}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["samsung galaxy a15", "galaxy a15", "a15"]
+    ,name:"Samsung Galaxy A15"
+    ,rams:[4, 6, 8]
+    ,ram:4,refresh:90,touch:70,performance:72,base:164
+    ,profiles:[{"ram":4,"refresh":90,"touch":70,"performance":72,"base":164},{"ram":6,"refresh":90,"touch":71,"performance":74,"base":166},{"ram":8,"refresh":90,"touch":72,"performance":76,"base":168}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["samsung galaxy a25", "galaxy a25", "a25"]
+    ,name:"Samsung Galaxy A25"
+    ,rams:[6, 8]
+    ,ram:6,refresh:120,touch:76,performance:80,base:174
+    ,profiles:[{"ram":6,"refresh":120,"touch":76,"performance":80,"base":174},{"ram":8,"refresh":120,"touch":77,"performance":82,"base":176}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["samsung galaxy a35", "galaxy a35", "a35"]
+    ,name:"Samsung Galaxy A35"
+    ,rams:[6, 8]
+    ,ram:6,refresh:120,touch:80,performance:85,base:179
+    ,profiles:[{"ram":6,"refresh":120,"touch":80,"performance":85,"base":179},{"ram":8,"refresh":120,"touch":81,"performance":87,"base":181}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["samsung galaxy a55", "galaxy a55", "a55"]
+    ,name:"Samsung Galaxy A55"
+    ,rams:[8, 12]
+    ,ram:8,refresh:120,touch:84,performance:90,base:184
+    ,profiles:[{"ram":8,"refresh":120,"touch":84,"performance":90,"base":184},{"ram":12,"refresh":120,"touch":86,"performance":94,"base":188}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["samsung galaxy s21 fe", "s21 fe"]
+    ,name:"Samsung Galaxy S21 FE"
+    ,rams:[6, 8]
+    ,ram:6,refresh:120,touch:88,performance:93,base:184
+    ,profiles:[{"ram":6,"refresh":120,"touch":88,"performance":93,"base":184},{"ram":8,"refresh":120,"touch":89,"performance":95,"base":186}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["samsung galaxy s22", "s22"]
+    ,name:"Samsung Galaxy S22"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:91,performance:96,base:190
+    ,profiles:[{"ram":8,"refresh":120,"touch":91,"performance":96,"base":190}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["samsung galaxy s23 fe", "s23 fe"]
+    ,name:"Samsung Galaxy S23 FE"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:90,performance:96,base:189
+    ,profiles:[{"ram":8,"refresh":120,"touch":90,"performance":96,"base":189}]
+  },
+  {
+    brand:"samsung"
+    ,aliases:["samsung galaxy s24 fe", "s24 fe"]
+    ,name:"Samsung Galaxy S24 FE"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:92,performance:97,base:192
+    ,profiles:[{"ram":8,"refresh":120,"touch":92,"performance":97,"base":192}]
+  },
+  {
+    brand:"redmi"
+    ,aliases:["redmi 12", "redmi 12 5g"]
+    ,name:"Redmi 12"
+    ,rams:[4, 6, 8]
+    ,ram:4,refresh:90,touch:70,performance:74,base:166
+    ,profiles:[{"ram":4,"refresh":90,"touch":70,"performance":74,"base":166},{"ram":6,"refresh":90,"touch":71,"performance":76,"base":168},{"ram":8,"refresh":90,"touch":72,"performance":78,"base":170}]
+  },
+  {
+    brand:"redmi"
+    ,aliases:["redmi 13", "redmi 13 5g"]
+    ,name:"Redmi 13"
+    ,rams:[6, 8]
+    ,ram:6,refresh:90,touch:74,performance:78,base:170
+    ,profiles:[{"ram":6,"refresh":90,"touch":74,"performance":78,"base":170},{"ram":8,"refresh":90,"touch":75,"performance":80,"base":172}]
+  },
+  {
+    brand:"redmi"
+    ,aliases:["redmi note 12 4g", "note 12 4g"]
+    ,name:"Redmi Note 12 4G"
+    ,rams:[4, 6, 8]
+    ,ram:4,refresh:120,touch:75,performance:80,base:174
+    ,profiles:[{"ram":4,"refresh":120,"touch":75,"performance":80,"base":174},{"ram":6,"refresh":120,"touch":76,"performance":82,"base":176},{"ram":8,"refresh":120,"touch":77,"performance":84,"base":178}]
+  },
+  {
+    brand:"redmi"
+    ,aliases:["redmi note 13 4g", "note 13 4g"]
+    ,name:"Redmi Note 13 4G"
+    ,rams:[6, 8]
+    ,ram:6,refresh:120,touch:78,performance:84,base:178
+    ,profiles:[{"ram":6,"refresh":120,"touch":78,"performance":84,"base":178},{"ram":8,"refresh":120,"touch":79,"performance":86,"base":180}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco c65", "c65"]
+    ,name:"POCO C65"
+    ,rams:[4, 6, 8]
+    ,ram:4,refresh:90,touch:65,performance:70,base:160
+    ,profiles:[{"ram":4,"refresh":90,"touch":65,"performance":70,"base":160},{"ram":6,"refresh":90,"touch":66,"performance":72,"base":162},{"ram":8,"refresh":90,"touch":67,"performance":74,"base":164}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco m6", "poco m6 5g"]
+    ,name:"POCO M6"
+    ,rams:[4, 6, 8]
+    ,ram:4,refresh:90,touch:70,performance:76,base:166
+    ,profiles:[{"ram":4,"refresh":90,"touch":70,"performance":76,"base":166},{"ram":6,"refresh":90,"touch":71,"performance":78,"base":168},{"ram":8,"refresh":90,"touch":72,"performance":80,"base":170}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco m6 pro 5g", "m6 pro 5g"]
+    ,name:"POCO M6 Pro 5G"
+    ,rams:[4, 6]
+    ,ram:4,refresh:90,touch:72,performance:78,base:170
+    ,profiles:[{"ram":4,"refresh":90,"touch":72,"performance":78,"base":170},{"ram":6,"refresh":90,"touch":73,"performance":80,"base":172},{"ram":6,"refresh":90,"touch":73,"performance":80,"base":172}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco x6 neo", "x6 neo"]
+    ,name:"POCO X6 Neo"
+    ,rams:[6, 8, 12]
+    ,ram:6,refresh:120,touch:80,performance:87,base:180
+    ,profiles:[{"ram":6,"refresh":120,"touch":80,"performance":87,"base":180},{"ram":8,"refresh":120,"touch":81,"performance":89,"base":182},{"ram":12,"refresh":120,"touch":83,"performance":92,"base":185}]
+  },
+  {
+    brand:"poco"
+    ,aliases:["poco f6 pro", "f6 pro"]
+    ,name:"POCO F6 Pro"
+    ,rams:[12, 16]
+    ,ram:12,refresh:120,touch:93,performance:98,base:193
+    ,profiles:[{"ram":12,"refresh":120,"touch":93,"performance":98,"base":193},{"ram":16,"refresh":120,"touch":95,"performance":102,"base":197}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["realme c55", "c55"]
+    ,name:"Realme C55"
+    ,rams:[6, 8]
+    ,ram:6,refresh:90,touch:72,performance:76,base:169
+    ,profiles:[{"ram":6,"refresh":90,"touch":72,"performance":76,"base":169},{"ram":8,"refresh":90,"touch":73,"performance":78,"base":171}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["realme c65", "c65"]
+    ,name:"Realme C65"
+    ,rams:[4, 6, 8]
+    ,ram:4,refresh:90,touch:73,performance:78,base:170
+    ,profiles:[{"ram":4,"refresh":90,"touch":73,"performance":78,"base":170},{"ram":6,"refresh":90,"touch":74,"performance":80,"base":172},{"ram":8,"refresh":90,"touch":75,"performance":82,"base":174}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["realme 12+", "realme 12 plus"]
+    ,name:"Realme 12+"
+    ,rams:[8, 12]
+    ,ram:8,refresh:120,touch:83,performance:89,base:182
+    ,profiles:[{"ram":8,"refresh":120,"touch":83,"performance":89,"base":182},{"ram":12,"refresh":120,"touch":85,"performance":93,"base":186}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["realme 12 pro"]
+    ,name:"Realme 12 Pro"
+    ,rams:[8, 12]
+    ,ram:8,refresh:120,touch:85,performance:92,base:185
+    ,profiles:[{"ram":8,"refresh":120,"touch":85,"performance":92,"base":185},{"ram":12,"refresh":120,"touch":87,"performance":96,"base":189}]
+  },
+  {
+    brand:"realme"
+    ,aliases:["realme gt 6", "gt 6"]
+    ,name:"Realme GT 6"
+    ,rams:[8, 12, 16]
+    ,ram:8,refresh:120,touch:91,performance:97,base:191
+    ,profiles:[{"ram":8,"refresh":120,"touch":91,"performance":97,"base":191},{"ram":12,"refresh":120,"touch":93,"performance":101,"base":195},{"ram":16,"refresh":120,"touch":95,"performance":104,"base":198}]
+  },
+  {
+    brand:"oneplus"
+    ,aliases:["oneplus 12"]
+    ,name:"OnePlus 12"
+    ,rams:[12, 16]
+    ,ram:12,refresh:120,touch:92,performance:98,base:193
+    ,profiles:[{"ram":12,"refresh":120,"touch":92,"performance":98,"base":193},{"ram":16,"refresh":120,"touch":94,"performance":102,"base":197}]
+  },
+  {
+    brand:"oneplus"
+    ,aliases:["oneplus 13"]
+    ,name:"OnePlus 13"
+    ,rams:[12, 16]
+    ,ram:12,refresh:120,touch:94,performance:99,base:194
+    ,profiles:[{"ram":12,"refresh":120,"touch":94,"performance":99,"base":194},{"ram":16,"refresh":120,"touch":96,"performance":103,"base":198}]
+  },
+  {
+    brand:"vivo"
+    ,aliases:["vivo y28", "y28"]
+    ,name:"Vivo Y28"
+    ,rams:[4, 6, 8]
+    ,ram:4,refresh:90,touch:70,performance:76,base:168
+    ,profiles:[{"ram":4,"refresh":90,"touch":70,"performance":76,"base":168},{"ram":6,"refresh":90,"touch":71,"performance":78,"base":170},{"ram":8,"refresh":90,"touch":72,"performance":80,"base":172}]
+  },
+  {
+    brand:"vivo"
+    ,aliases:["vivo y200", "y200"]
+    ,name:"Vivo Y200"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:78,performance:84,base:178
+    ,profiles:[{"ram":8,"refresh":120,"touch":78,"performance":84,"base":178}]
+  },
+  {
+    brand:"vivo"
+    ,aliases:["vivo v29", "v29"]
+    ,name:"Vivo V29"
+    ,rams:[8, 12]
+    ,ram:8,refresh:120,touch:86,performance:92,base:185
+    ,profiles:[{"ram":8,"refresh":120,"touch":86,"performance":92,"base":185},{"ram":12,"refresh":120,"touch":88,"performance":96,"base":189}]
+  },
+  {
+    brand:"oppo"
+    ,aliases:["oppo a59", "a59"]
+    ,name:"OPPO A59"
+    ,rams:[4, 6, 8]
+    ,ram:4,refresh:90,touch:70,performance:76,base:168
+    ,profiles:[{"ram":4,"refresh":90,"touch":70,"performance":76,"base":168},{"ram":6,"refresh":90,"touch":71,"performance":78,"base":170},{"ram":8,"refresh":90,"touch":72,"performance":80,"base":172}]
+  },
+  {
+    brand:"oppo"
+    ,aliases:["oppo a79", "a79"]
+    ,name:"OPPO A79"
+    ,rams:[8]
+    ,ram:8,refresh:90,touch:74,performance:80,base:173
+    ,profiles:[{"ram":8,"refresh":90,"touch":74,"performance":80,"base":173}]
+  },
+  {
+    brand:"oppo"
+    ,aliases:["oppo reno 10", "reno 10"]
+    ,name:"OPPO Reno 10"
+    ,rams:[8, 12]
+    ,ram:8,refresh:120,touch:83,performance:90,base:182
+    ,profiles:[{"ram":8,"refresh":120,"touch":83,"performance":90,"base":182},{"ram":12,"refresh":120,"touch":85,"performance":94,"base":186}]
+  },
+  {
+    brand:"iqoo"
+    ,aliases:["iqoo z7", "z7"]
+    ,name:"iQOO Z7"
+    ,rams:[6, 8]
+    ,ram:6,refresh:90,touch:82,performance:88,base:180
+    ,profiles:[{"ram":6,"refresh":90,"touch":82,"performance":88,"base":180},{"ram":8,"refresh":90,"touch":83,"performance":90,"base":182}]
+  },
+  {
+    brand:"iqoo"
+    ,aliases:["iqoo z9 turbo", "z9 turbo"]
+    ,name:"iQOO Z9 Turbo"
+    ,rams:[12, 16]
+    ,ram:12,refresh:144,touch:92,performance:98,base:193
+    ,profiles:[{"ram":12,"refresh":144,"touch":92,"performance":98,"base":193},{"ram":16,"refresh":144,"touch":94,"performance":102,"base":197}]
+  },
+  {
+    brand:"iqoo"
+    ,aliases:["iqoo neo 7 pro", "neo 7 pro"]
+    ,name:"iQOO Neo 7 Pro"
+    ,rams:[8, 12]
+    ,ram:8,refresh:120,touch:90,performance:96,base:190
+    ,profiles:[{"ram":8,"refresh":120,"touch":90,"performance":96,"base":190},{"ram":12,"refresh":120,"touch":92,"performance":100,"base":194}]
+  },
+  {
+    brand:"motorola"
+    ,aliases:["motorola g84", "moto g84"]
+    ,name:"Motorola G84"
+    ,rams:[8, 12]
+    ,ram:8,refresh:120,touch:80,performance:86,base:180
+    ,profiles:[{"ram":8,"refresh":120,"touch":80,"performance":86,"base":180},{"ram":12,"refresh":120,"touch":82,"performance":90,"base":184}]
+  },
+  {
+    brand:"motorola"
+    ,aliases:["motorola g85", "moto g85"]
+    ,name:"Motorola G85"
+    ,rams:[8, 12]
+    ,ram:8,refresh:120,touch:84,performance:90,base:184
+    ,profiles:[{"ram":8,"refresh":120,"touch":84,"performance":90,"base":184},{"ram":12,"refresh":120,"touch":86,"performance":94,"base":188}]
+  },
+  {
+    brand:"motorola"
+    ,aliases:["motorola edge 40", "edge 40"]
+    ,name:"Motorola Edge 40"
+    ,rams:[8]
+    ,ram:8,refresh:144,touch:88,performance:94,base:189
+    ,profiles:[{"ram":8,"refresh":144,"touch":88,"performance":94,"base":189}]
+  },
+  {
+    brand:"infinix"
+    ,aliases:["infinix hot 40 pro", "hot 40 pro"]
+    ,name:"Infinix Hot 40 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:80,performance:86,base:178
+    ,profiles:[{"ram":8,"refresh":120,"touch":80,"performance":86,"base":178}]
+  },
+  {
+    brand:"tecno"
+    ,aliases:["tecno pova 5 pro", "pova 5 pro"]
+    ,name:"Tecno Pova 5 Pro"
+    ,rams:[8]
+    ,ram:8,refresh:120,touch:80,performance:86,base:178
+    ,profiles:[{"ram":8,"refresh":120,"touch":80,"performance":86,"base":178}]
+  },
+  {
+    brand:"tecno"
+    ,aliases:["tecno pova 6", "pova 6"]
+    ,name:"Tecno Pova 6"
+    ,rams:[8, 12]
+    ,ram:8,refresh:120,touch:83,performance:90,base:182
+    ,profiles:[{"ram":8,"refresh":120,"touch":83,"performance":90,"base":182},{"ram":12,"refresh":120,"touch":85,"performance":94,"base":186}]
+  },
+  {
+    brand:"lava"
+    ,aliases:["lava blaze 5g", "blaze 5g"]
+    ,name:"Lava Blaze 5G"
+    ,rams:[4, 6, 8]
+    ,ram:4,refresh:90,touch:70,performance:76,base:170
+    ,profiles:[{"ram":4,"refresh":90,"touch":70,"performance":76,"base":170},{"ram":6,"refresh":90,"touch":71,"performance":78,"base":172},{"ram":8,"refresh":90,"touch":72,"performance":80,"base":174}]
+  }
+];
+
+/* =========================================================
+   STATE
+========================================================= */
+const S = {
+  refresh:90,
+  fingers:3,
+  style:"rusher",
+  drag:70,
+  distance:"medium",
+  calibratedDistance:0,
+  calibratedTime:0,
+  calibratedSpeed:0,
+  calibrationDone:false,
+  calibrationSamples:[],
+  aim:"head",
+  fps:"high",
+  touch:75,
+  fire:48,
+  gyro:"off",
+  device:null,
+  ram:8,
+  age:0,
+  performance:0
+};
+
+/* =========================================================
+   DOM REFERENCES
+========================================================= */
+const brandEl=document.getElementById("brand");
+const deviceEl=document.getElementById("device");
+const ramEl=document.getElementById("ram");
+const ageEl=document.getElementById("age");
+const deviceStatusEl=document.getElementById("deviceStatus");
+const suggestionsEl=document.getElementById("suggestions");
+const continue1El=document.getElementById("continue1");
+const dragEl=document.getElementById("drag");
+const dragValEl=document.getElementById("dragVal");
+const touchEl=document.getElementById("touch");
+const touchValEl=document.getElementById("touchVal");
+const fireEl=document.getElementById("fire");
+const fireValEl=document.getElementById("fireVal");
+const toastEl=document.getElementById("toast");
+
+function normalize(text){
+  return String(text||"").toLowerCase().replace(/[-_+]/g," ").replace(/\s+/g," ").trim();
+}
+function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
+function showToast(message){
+  if(!toastEl)return;
+  toastEl.textContent=message;
+  toastEl.classList.add("show");
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>toastEl.classList.remove("show"),2200);
+}
+
+/* =========================================================
+   DEVICE / RAM ENGINE
+========================================================= */
+function getRamProfile(device,ram){
+  if(!device)return null;
+  const wanted=Number(ram);
+  const profiles=Array.isArray(device.profiles)?device.profiles:[];
+  return profiles.find(p=>Number(p.ram)===wanted) || profiles[0] || device;
+}
+
+function findDevice(model){
+  const clean=normalize(model);
+  if(!clean)return null;
+  const matches=devices.filter(d=>d.aliases.some(alias=>{
+    const a=normalize(alias);
+    return clean===a || clean.includes(a) || a.includes(clean);
+  }));
+  if(!matches.length)return null;
+  const selectedRam=Number(ramEl?.value||S.ram||0);
+  const match=matches.find(d=>Array.isArray(d.rams)&&d.rams.includes(selectedRam));
+  return match||matches[0];
+}
+
+function brandCompatible(selected,foundBrand){
+  const s=normalize(selected),f=normalize(foundBrand);
+  if(!s||s==="other")return true;
+  if(s===f)return true;
+  if((s==="xiaomi"&&f==="redmi")||(s==="redmi"&&f==="xiaomi"))return true;
+  return false;
+}
+
+function setDeviceStatus(type,html){
+  deviceStatusEl.className="deviceStatus";
+  if(type==="warn")deviceStatusEl.classList.add("warn");
+  if(type==="info")deviceStatusEl.classList.add("info");
+  deviceStatusEl.innerHTML=html;
+  deviceStatusEl.style.display="block";
+}
+
+function updateRamOptions(device,preferredRam){
+  if(!ramEl)return;
+  const old=Number(preferredRam ?? ramEl.value ?? S.ram ?? 8);
+  const available=(device&&Array.isArray(device.rams)?device.rams:[3,4,6,8,12])
+    .map(Number).filter(n=>Number.isFinite(n)&&n>=3);
+  const unique=[...new Set(available)].sort((a,b)=>a-b);
+  ramEl.innerHTML=unique.map(r=>`<option value="${r}">${r===12?"12 GB":r+" GB"}</option>`).join("");
+  const selected=unique.includes(old)?old:(device?.ram&&unique.includes(Number(device.ram))?Number(device.ram):unique[0]);
+  ramEl.value=String(selected);
+  S.ram=selected;
+}
+
+function formatRam(ram){
+  const n=Number(ram);
+  return n===12?"12 GB":n>=12?n+" GB":n+" GB";
+}
+
+function syncOptionStates(){
+  ["refresh","fingers","style","distance","aim","fps","gyro"].forEach(key=>{
+    const box=document.getElementById(key);
+    if(!box)return;
+    box.querySelectorAll(".option").forEach(el=>{
+      const value=key==="refresh"?Number(el.dataset.value):el.dataset.value;
+      el.classList.toggle("active", value===S[key]);
+    });
+  });
+}
+
+function applyDeviceProfile(found,preferredRam){
+  if(!found)return;
+  const ram=Number(preferredRam||S.ram||found.ram||8);
+  const profile=getRamProfile(found,ram)||found;
+  S.device=found;
+  S.ram=Number(profile.ram||ram);
+  if(profile.refresh){
+    S.refresh=Number(profile.refresh);
+    document.querySelectorAll("#refresh .option").forEach(x=>x.classList.toggle("active",Number(x.dataset.value)===S.refresh));
+  }
+  if(profile.touch){
+    S.touch=Number(profile.touch);
+    if(touchEl){touchEl.value=String(S.touch);if(touchValEl)touchValEl.textContent=String(S.touch);}
+  }
+  if(profile.performance)S.performance=Number(profile.performance);
+  if(ramEl)ramEl.value=String(S.ram);
+  setDeviceStatus("ok",
+    "✓ <b>Device profile matched</b><br>"+
+    found.name+" • "+formatRam(S.ram)+" • "+S.refresh+" Hz • Touch "+S.touch+"/100 • Performance "+S.performance+"/100");
+}
+
+function validateDevice(){
+  const model=deviceEl.value.trim();
+  const selectedBrand=brandEl.value;
+  if(!model){
+    S.device=null;
+    updateRamOptions(null,S.ram||8);
+    deviceStatusEl.style.display="none";
+    continue1El.disabled=false;
+    return {ok:true,found:null};
+  }
+  const found=findDevice(model);
+  if(!found){
+    S.device=null;
+    updateRamOptions(null,S.ram||8);
+    setDeviceStatus("info","ℹ️ <b>Device not in database yet.</b><br>TactiFF will use a generic hardware profile instead of claiming an exact match.");
+    continue1El.disabled=false;
+    return {ok:true,found:null};
+  }
+  if(!brandCompatible(selectedBrand,found.brand)){
+    S.device=null;
+    setDeviceStatus("warn","⚠️ <b>Brand & Model mismatch</b><br>"+found.name+" belongs to <b>"+found.brand.toUpperCase()+"</b>. Please select the correct brand.");
+    continue1El.disabled=true;
+    return {ok:false,found};
+  }
+  const preferredRam=Number(ramEl.value||S.ram||found.ram);
+  updateRamOptions(found,preferredRam);
+  applyDeviceProfile(found,S.ram);
+  continue1El.disabled=false;
+  return {ok:true,found};
+}
+
+function renderSuggestions(){
+  const q=normalize(deviceEl.value);
+  if(!q){suggestionsEl.style.display="none";return;}
+  const seen=new Set();
+  const matches=[];
+  for(const d of devices){
+    if(seen.has(d.name))continue;
+    const selectedBrand=normalize(brandEl.value);
+    if(selectedBrand && selectedBrand!=="other" && !brandCompatible(selectedBrand,d.brand)) continue;
+    const hay=[d.name,...d.aliases].map(normalize).join(" ");
+    if(hay.includes(q)){seen.add(d.name);matches.push(d);}
+    if(matches.length>=7)break;
+  }
+  if(!matches.length){suggestionsEl.style.display="none";return;}
+  suggestionsEl.innerHTML=matches.map(d=>`<div class="suggestion" data-model="${d.name}">📱 ${d.name}${d.rams?.length?` • ${d.rams.join(" / ")} GB`:""}</div>`).join("");
+  suggestionsEl.style.display="block";
+}
+
+deviceEl.addEventListener("input",()=>{renderSuggestions();validateDevice();});
+brandEl.addEventListener("change",()=>validateDevice());
+ramEl.addEventListener("change",()=>{
+  S.ram=Number(ramEl.value);
+  if(deviceEl.value.trim())validateDevice();
+  else showToast("RAM profile updated: "+(S.ram>=12?"12 GB+":S.ram+" GB"));
+});
+ageEl.addEventListener("change",()=>{S.age=Number(ageEl.value);});
+suggestionsEl.addEventListener("click",e=>{
+  const item=e.target.closest(".suggestion");
+  if(!item)return;
+  deviceEl.value=item.dataset.model;
+  suggestionsEl.style.display="none";
+  validateDevice();
+});
+document.addEventListener("click",e=>{
+  if(!deviceEl.contains(e.target)&&!suggestionsEl.contains(e.target))suggestionsEl.style.display="none";
+});
+
+/* =========================================================
+   OPTIONS + SLIDERS
+========================================================= */
+function setupOptions(id,key){
+  const box=document.getElementById(id);if(!box)return;
+  box.querySelectorAll(".option").forEach(el=>el.addEventListener("click",()=>{
+    box.querySelectorAll(".option").forEach(x=>x.classList.remove("active"));
+    el.classList.add("active");
+    S[key]=key==="refresh"?Number(el.dataset.value):el.dataset.value;
+  }));
+}
+["refresh","fingers","style","distance","aim","fps","gyro"].forEach(k=>setupOptions(k,k));
+dragEl.addEventListener("input",()=>{S.drag=Number(dragEl.value);dragValEl.textContent=dragEl.value;});
+touchEl.addEventListener("input",()=>{S.touch=Number(touchEl.value);touchValEl.textContent=touchEl.value;});
+fireEl.addEventListener("input",()=>{S.fire=Number(fireEl.value);fireValEl.textContent=fireEl.value+"%";});
+
+/* =========================================================
+   DRAG CALIBRATION
+========================================================= */
+const dragTrackEl=document.getElementById("dragTrack"),calDistanceEl=document.getElementById("calDistance"),calTimeEl=document.getElementById("calTime"),calSpeedEl=document.getElementById("calSpeed"),calResultEl=document.getElementById("calResult"),calResetEl=document.getElementById("calReset"),calProgressEl=document.getElementById("calProgress"),calStats=document.getElementById("calStats");
+let calStart=null,calPointer=null,calLast=null;
+function resetCalibration(){
+  calStart=calPointer=calLast=null;S.calibratedDistance=0;S.calibratedTime=0;S.calibratedSpeed=0;S.calibrationDone=false;S.calibrationSamples=[];
+  calStats.innerHTML="Tests: <b>0/3</b> • Average: — • Consistency: —";calProgressEl.style.width="0%";calDistanceEl.textContent="0";calTimeEl.textContent="0";calSpeedEl.textContent="0";calResultEl.textContent="No calibration yet. Complete one upward drag.";
+}
+function finishCalibration(distance,elapsed){
+  const speed=elapsed>0?(distance/elapsed)*1000:0;calDistanceEl.textContent=Math.round(distance);calTimeEl.textContent=Math.round(elapsed);calSpeedEl.textContent=Math.round(speed);
+  if(distance<35||elapsed<40){calResultEl.textContent="⚠️ Drag was too short or too quick. Try a controlled upward swipe to the target.";return;}
+  S.calibrationSamples.push({distance,time:elapsed,speed});if(S.calibrationSamples.length>3)S.calibrationSamples.shift();
+  const samples=S.calibrationSamples,avg=k=>samples.reduce((a,b)=>a+b[k],0)/samples.length,avgDistance=avg("distance"),avgTime=avg("time"),avgSpeed=avg("speed");
+  const speeds=samples.map(x=>x.speed),spread=Math.max(...speeds)-Math.min(...speeds),consistency=avgSpeed>0?clamp(Math.round(100-(spread/avgSpeed)*100),0,100):0;
+  S.calibratedDistance=Math.round(avgDistance);S.calibratedTime=Math.round(avgTime);S.calibratedSpeed=Math.round(avgSpeed);S.calibrationDone=samples.length>=3;
+  calStats.innerHTML="Tests: <b>"+samples.length+"/3</b> • Average: <b>"+Math.round(avgDistance)+" px / "+Math.round(avgSpeed)+" px/s</b> • Consistency: <b>"+consistency+"%</b>";calProgressEl.style.width=(samples.length/3*100)+"%";
+  if(!S.calibrationDone){calResultEl.innerHTML="✓ Test "+samples.length+"/3 recorded. Do "+(3-samples.length)+" more controlled drag"+((3-samples.length)>1?"s":"")+" for automatic averaging.";return;}
+  const label=avgSpeed>=850?"Very Fast":avgSpeed>=600?"Fast":avgSpeed<280?"Slow":"Controlled";
+  const distanceFactor=clamp((avgDistance-55)*0.22,-12,12),speedFactor=clamp((avgSpeed-500)/90,-8,8),calibratedDrag=clamp(Math.round(70+distanceFactor+speedFactor),1,100);
+  S.drag=calibratedDrag;dragEl.value=calibratedDrag;dragValEl.textContent=calibratedDrag;S.distance=avgSpeed>=850?"short":avgSpeed<280?"long":"medium";
+  document.querySelectorAll("#distance .option").forEach(x=>x.classList.toggle("active",x.dataset.value===S.distance));
+  calResultEl.innerHTML="✓ <b>Calibration complete.</b> "+label+" drag • Average <b>"+Math.round(avgDistance)+" px</b> at <b>"+Math.round(avgSpeed)+" px/s</b> • Drag Speed automatically set to <b>"+calibratedDrag+"</b>.";
+}
+dragTrackEl.addEventListener("pointerdown",e=>{e.preventDefault();calPointer=e.pointerId;dragTrackEl.setPointerCapture(calPointer);const r=dragTrackEl.getBoundingClientRect();calStart={x:e.clientX-r.left,y:e.clientY-r.top,t:performance.now()};calLast=calStart;});
+dragTrackEl.addEventListener("pointermove",e=>{if(calPointer!==e.pointerId||!calStart)return;e.preventDefault();const r=dragTrackEl.getBoundingClientRect();calLast={x:e.clientX-r.left,y:e.clientY-r.top,t:performance.now()};});
+function endCalibration(e){if(calPointer!==e.pointerId||!calStart)return;const r=dragTrackEl.getBoundingClientRect(),end=calLast||{x:e.clientX-r.left,y:e.clientY-r.top,t:performance.now()};const distance=Math.max(0,calStart.y-end.y),elapsed=Math.max(1,end.t-calStart.t);calPointer=calStart=calLast=null;finishCalibration(distance,elapsed);}
+dragTrackEl.addEventListener("pointerup",endCalibration);dragTrackEl.addEventListener("pointercancel",endCalibration);calResetEl.addEventListener("click",resetCalibration);
+
+/* =========================================================
+   SAVE / LOAD PROFILE
+========================================================= */
+const profileStatusEl=document.getElementById("profileStatus"),saveProfileEl=document.getElementById("saveProfile"),loadProfileEl=document.getElementById("loadProfile");
+function getProfileData(){return {version:"TactiFF V4 Final",device:S.device,refresh:S.refresh,ram:S.ram,age:S.age,fingers:S.fingers,style:S.style,drag:S.drag,distance:S.distance,aim:S.aim,fps:S.fps,touch:S.touch,gyro:S.gyro,fire:S.fire,calibratedDistance:S.calibratedDistance,calibratedTime:S.calibratedTime,calibratedSpeed:S.calibratedSpeed,calibrationDone:S.calibrationDone,calibrationSamples:S.calibrationSamples};}
+function applyProfileData(p){
+  if(!p)return false;
+  Object.keys(p).forEach(k=>{if(k!=="version"&&Object.prototype.hasOwnProperty.call(S,k))S[k]=p[k];});
+  if(S.drag!=null){dragEl.value=S.drag;dragValEl.textContent=S.drag;}
+  if(S.touch!=null){touchEl.value=S.touch;touchValEl.textContent=S.touch;}
+  if(S.fire!=null){fireEl.value=S.fire;fireValEl.textContent=S.fire+"%";}
+  if(S.age!=null)ageEl.value=S.age;
+  if(S.device){
+    deviceEl.value=S.device.name||"";
+    brandEl.value=S.device.brand||"";
+    updateRamOptions(S.device,S.ram);
+    applyDeviceProfile(S.device,S.ram);
+  }else{
+    updateRamOptions(null,S.ram);
+  }
+  syncOptionStates();
+  return true;
+}
+saveProfileEl.addEventListener("click",()=>{try{localStorage.setItem("tactiff_v4_profile",JSON.stringify(getProfileData()));profileStatusEl.textContent="✓ Profile saved on this device.";}catch(e){profileStatusEl.textContent="⚠️ Browser storage unavailable.";}});
+loadProfileEl.addEventListener("click",()=>{try{const raw=localStorage.getItem("tactiff_v4_profile");if(!raw){profileStatusEl.textContent="No saved profile found.";return;}profileStatusEl.textContent=applyProfileData(JSON.parse(raw))?"✓ Profile loaded.":"⚠️ Invalid profile.";}catch(e){profileStatusEl.textContent="⚠️ Could not load profile.";}});
+
+/* =========================================================
+   AIM TEST
+========================================================= */
+const aimCanvas=document.getElementById("aimCanvas"),aimTarget=document.getElementById("aimTarget"),aimHitsEl=document.getElementById("aimHits"),aimShotsEl=document.getElementById("aimShots"),aimAccuracyEl=document.getElementById("aimAccuracy"),aimReactionEl=document.getElementById("aimReaction"),aimResetEl=document.getElementById("aimReset");
+let aimHits=0,aimShots=0,aimReactionTotal=0,aimStartedAt=0;
+function moveAimTarget(){const r=aimCanvas.getBoundingClientRect(),pad=28,x=pad+Math.random()*Math.max(1,r.width-pad*2),y=pad+Math.random()*Math.max(1,r.height-pad*2);aimTarget.style.left=x+"px";aimTarget.style.top=y+"px";aimStartedAt=performance.now();}
+function updateAimStats(){aimHitsEl.textContent=aimHits;aimShotsEl.textContent=aimShots;aimAccuracyEl.textContent=aimShots?Math.round(aimHits/aimShots*100)+"%":"0%";aimReactionEl.textContent=aimHits?Math.round(aimReactionTotal/aimHits):"—";}
+function resetAimTest(){aimHits=0;aimShots=0;aimReactionTotal=0;updateAimStats();moveAimTarget();}
+aimTarget.addEventListener("pointerdown",e=>{e.preventDefault();const reaction=performance.now()-aimStartedAt;aimHits++;aimShots++;aimReactionTotal+=reaction;updateAimStats();moveAimTarget();});
+aimCanvas.addEventListener("pointerdown",e=>{if(e.target===aimTarget)return;aimShots++;updateAimStats();});aimResetEl.addEventListener("click",resetAimTest);resetAimTest();
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+function goToPlayer(){const result=validateDevice();if(!result.ok){showToast("Fix the brand and model mismatch first.");return;}next(2);}
+function next(n){document.querySelectorAll(".step").forEach(x=>x.classList.remove("active"));const target=document.getElementById("step"+n);if(!target)return;target.classList.add("active");const percent=n*25;document.getElementById("bar").style.width=percent+"%";document.getElementById("percent").textContent=percent+"%";const labels={1:"Device Analysis",2:"Player Profile",3:"Touch & Performance",4:"Your Result"};document.getElementById("stepLabel").textContent=labels[n];window.scrollTo({top:0,behavior:"smooth"});}
+
+/* =========================================================
+   SENSITIVITY ENGINE
+========================================================= */
+function generate(){
+  const result=validateDevice();if(!result.ok){next(1);showToast("Brand and model do not match.");return;}
+  let base=170,touchScore=S.touch;
+  if(S.device){const profile=getRamProfile(S.device,S.ram)||S.device;base=Number(profile.base||S.device.base||170);touchScore=Number(profile.touch||S.device.touch||S.touch);}
+  else{const ramValue=Number(S.ram||ramEl.value);base+=ramValue>=12?6:ramValue>=8?3:ramValue<=4?-7:-2;base+=S.refresh>=120?5:S.refresh>=90?2:-3;}
+  base-=Number(S.age||0)*2;
+  base+=(touchScore-70)*0.12;
+  const ramValue=Number(S.ram||ramEl.value);if(ramValue>=12)base+=4;if(ramValue<=4)base-=5;if(ramValue===3)base-=3;
+  base+=({low:-7,mid:0,high:3,ultra:5}[S.fps]||0);
+  base+=({rusher:8,balanced:2,sniper:-8,support:-2}[S.style]||0);
+  if(Number(S.fingers)===4)base+=4;if(Number(S.fingers)===2)base-=3;
+  base+=(S.drag-50)*0.13;if(S.distance==="short")base+=4;if(S.distance==="long")base-=4;
+  if(S.aim==="head")base+=5;if(S.aim==="onetap")base+=6;if(S.aim==="stable")base-=5;if(S.gyro==="on")base-=3;
+  base=Math.round(clamp(base,100,195));
+  let general=base,red=Math.round(base-7),two=Math.round(base-18),four=Math.round(base-31),sniper=Math.round(base-49),free=Math.round(base-9);
+  red=clamp(red,80,195);two=clamp(two,70,190);four=clamp(four,55,180);sniper=clamp(sniper,40,150);free=clamp(free,70,195);
+  let aim=72+(touchScore-60)*0.15+(S.drag-50)*0.10;if(S.aim==="head")aim+=7;if(S.aim==="onetap")aim+=6;aim=clamp(Math.round(aim),50,98);
+  let dragScore=clamp(Math.round(100-Math.abs(S.drag-70)*0.45),55,98);
+  let stability=75+(touchScore*0.08);if(S.fps==="low")stability-=10;if(S.fps==="ultra")stability+=3;stability=clamp(Math.round(stability),50,98);const score=Math.round((aim+dragScore+stability)/3);
+  ["general","red","two","four","sniper","free"].forEach((id,i)=>document.getElementById(id).textContent=[general,red,two,four,sniper,free][i]);
+  document.getElementById("score").textContent=score;document.getElementById("aimScore").textContent=aim;document.getElementById("dragScore").textContent=dragScore;document.getElementById("stableScore").textContent=stability;
+  document.getElementById("profileName").textContent=S.style==="rusher"?"Aggressive Headshot Profile":S.style==="sniper"?"Precision Sniper Profile":S.style==="support"?"Stable Support Profile":"Balanced Headshot Profile";
+  document.getElementById("deviceBadge").textContent=S.device?"✓ DEVICE PROFILE MATCHED":"• GENERIC DEVICE PROFILE";
+  document.getElementById("deviceTip").textContent=S.device?`📱 ${S.device.name} • ${formatRam(S.ram)+" RAM"} • ${S.refresh} Hz`:"📱 Exact device profile not found. Generic hardware profile used.";
+  const dpi=base>=185?"480–560":base>=175?"430–500":base>=160?"390–450":"360–420";document.getElementById("dpiTip").textContent="🎯 DPI starting range: "+dpi+". Test gradually instead of changing DPI repeatedly.";
+  document.getElementById("fireTip").textContent="🔥 Fire button: "+S.fire+"%. Keep it large enough for consistent drag control.";
+  const dragProfile=S.drag>=82?"Fast":S.drag>=65?"Medium-Fast":S.drag>=45?"Controlled":"Slow";document.getElementById("dragTip").textContent="👆 Drag profile: "+dragProfile+(S.calibrationDone?" • Calibrated at "+S.calibratedDistance+" px / "+S.calibratedSpeed+" px/s.":". Start with short upward swipes and adjust only after testing.");
+  const weapon=S.style==="rusher"?"M1887 / M590: short explosive drag":S.style==="sniper"?"AWM / Woodpecker: prioritize stability":"AR / SMG: balanced Red Dot + 2X control";document.getElementById("weaponTip").textContent="🔫 Weapon focus: "+weapon;
+  localStorage.setItem("tactiffResult",JSON.stringify({general,red,two,four,sniper,free,score,device:S.device?.name||null,ram:S.ram,age:S.age}));next(4);
+}
+
+function tune(type){let g=Number(document.getElementById("general").textContent),r=Number(document.getElementById("red").textContent);if(type==="up"){g-=4;r-=4;}if(type==="down"){g+=4;r+=4;}if(type==="slow"){g+=5;r+=4;}if(type==="fast"){g-=5;r-=4;}g=clamp(g,100,200);r=clamp(r,80,195);document.getElementById("general").textContent=g;document.getElementById("red").textContent=r;showToast("Sensitivity adjusted for your feedback 🎯");}
+function copyResult(){const text=`TACTIFF SENSITIVITY V4\n\nDevice: ${S.device?S.device.name:deviceEl.value||"Generic Device"}\nRAM: ${formatRam(S.ram)}\nAge: ${ageEl.options[ageEl.selectedIndex]?.text||"Unknown"}\nRefresh: ${S.refresh} Hz\n\nGeneral: ${document.getElementById("general").textContent}\nRed Dot: ${document.getElementById("red").textContent}\n2X Scope: ${document.getElementById("two").textContent}\n4X Scope: ${document.getElementById("four").textContent}\nSniper: ${document.getElementById("sniper").textContent}\nFree Look: ${document.getElementById("free").textContent}\n\nDrag Calibration: ${S.calibrationDone?`${S.calibratedDistance}px in ${S.calibratedTime}ms (${S.calibratedSpeed}px/s)`:"Not performed"}\nProfile Score: ${document.getElementById("score").textContent}/100\n\nGenerated by TactiFF`;if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(()=>showToast("Settings copied! 🎯")).catch(()=>showToast("Copy failed. Please copy manually."));else showToast("Copy is not supported in this browser.");}
+function restart(){deviceEl.value="";brandEl.value="";S.device=null;S.ram=8;updateRamOptions(null,8);ageEl.value="0";S.age=0;S.refresh=90;S.drag=70;dragEl.value=70;dragValEl.textContent="70";resetCalibration();if(typeof resetAimTest==="function")resetAimTest();document.querySelectorAll("#refresh .option").forEach(x=>x.classList.toggle("active",x.dataset.value==="90"));deviceStatusEl.style.display="none";suggestionsEl.style.display="none";continue1El.disabled=false;next(1);}
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+S.ram=Number(ramEl.value)||8;S.age=Number(ageEl.value)||0;S.touch=Number(touchEl.value)||75;S.fire=Number(fireEl.value)||48;updateRamOptions(null,S.ram);syncOptionStates();
+</script>
+
+</main>
+
+<footer class="pro-footer"><div class="pro-footer-inner"><div><h3>TactiFF</h3><p>Free Fire sensitivity generator and gaming tools for device-aware settings, HUD, gun setup, character combos and stylish text.</p><p>© 2026 TactiFF. All rights reserved.</p></div><div><b>Quick Links</b><a href="./index.html">Home</a><a href="./sensitivity.html">Sensitivity</a><a href="./gun-sensitivity.html">Gun Settings</a><a href="./hud.html">HUD</a></div><div><b>Tools</b><a href="./character-combos.html">Character Combos</a><a href="./stylish-names.html">Stylish Names</a><a href="./quick-tools.html">Quick Tools</a><a href="./resources.html">Resources</a></div><div><b>Information</b><a href="./sensitivity-guide.html">Sensitivity Guide</a><a href="./device-guide.html">Device Guide</a><a href="./about.html">About</a><a href="./contact.html">Contact</a><a href="./privacy.html">Privacy</a><a href="./disclaimer.html">Disclaimer</a></div></div></footer>
+</div>
+</body>
+</html>
