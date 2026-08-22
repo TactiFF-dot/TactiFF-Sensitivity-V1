@@ -1962,37 +1962,356 @@ function validateDevice(){
 
   }
 
-  S.device = found;
+  function updateRamOptions(device)
+  
+  {
 
+  if(!ramEl) return;
+
+  const currentRam = String(ramEl.value);
+
+  const availableRams = device && Array.isArray(device.rams)
+    ? device.rams.map(Number)
+    : [3,4,6,8,12];
+
+  ramEl.innerHTML = availableRams.map(ram => `
+    <option value="${ram}">
+      ${ram >= 12 ? "12 GB+" : ram + " GB"}
+    </option>
+  `).join("");
+
+  if(availableRams.includes(Number(currentRam))){
+    ramEl.value = currentRam;
+  }else{
+    ramEl.value = String(availableRams[0]);
+  }
+
+  S.ram = Number(ramEl.value);
+}
+
+function validateDevice()
+
+{
+
+  S.device = found;
+  
+updateRamOptions(found);
+  
 /* Auto-fill known hardware values */
 if(found.ram){
   ramEl.value = String(found.ram);
 }
 
-if(found.refresh){
-  S.refresh = Number(found.refresh);
+```javascript
+/* =========================================================
+   DEVICE RAM OPTIONS + DEVICE VALIDATION
+   TactiFF V3 Upgrade
+========================================================= */
 
-  document.querySelectorAll("#refresh .option").forEach(x=>{
-    x.classList.toggle(
-      "active",
-      Number(x.dataset.value) === Number(found.refresh)
-    );
-  });
-}
+/* ---------------------------------------------------------
+   RAM OPTIONS
+   हर device के available RAM के हिसाब से dropdown बदलेगा
+--------------------------------------------------------- */
 
-/* Keep device profile touch value */
-if(found.touch){
-  S.touch = Number(found.touch);
+function updateRamOptions(device){
 
-  if(touchEl){
-    touchEl.value = String(found.touch);
-    touchValEl.textContent = String(found.touch);
+  if(!ramEl) return;
+
+  const currentRam = Number(ramEl.value);
+
+  /*
+    अगर device में "rams" दिया है:
+    उसी के हिसाब से options आएंगे.
+
+    अगर device में rams नहीं है:
+    Low-end 3GB + 4GB से लेकर 12GB+ तक generic options.
+  */
+
+  const availableRams =
+    device && Array.isArray(device.rams)
+      ? device.rams.map(Number)
+      : [3,4,6,8,12];
+
+  /*
+    Duplicate RAM हटाना
+  */
+  const uniqueRams = [...new Set(availableRams)]
+    .filter(ram => ram >= 3)
+    .sort((a,b) => a-b);
+
+  /*
+    RAM dropdown बनाना
+  */
+  ramEl.innerHTML = uniqueRams.map(ram => `
+    <option value="${ram}">
+      ${ram >= 12 ? "12 GB+" : ram + " GB"}
+    </option>
+  `).join("");
+
+  /*
+    अगर पहले selected RAM इस device में available है
+    तो वही रहने दो.
+  */
+  if(uniqueRams.includes(currentRam)){
+
+    ramEl.value = String(currentRam);
+
+  }else{
+
+    /*
+      नहीं है तो सबसे suitable RAM select करो.
+    */
+    ramEl.value = String(uniqueRams[0]);
+
   }
+
+  /*
+    Global state update
+  */
+  S.ram = Number(ramEl.value);
+
 }
 
-  document.querySelectorAll("#refresh .option").forEach(x=>{
-    x.classList.toggle("active",Number(x.dataset.value)===found.refresh);
+
+/* ---------------------------------------------------------
+   RAM CHANGE EVENT
+   User manually RAM बदले तो S.ram भी update हो
+--------------------------------------------------------- */
+
+if(ramEl){
+
+  ramEl.addEventListener("change",()=>{
+
+    S.ram = Number(ramEl.value);
+
+    /*
+      RAM बदलने पर device profile को फिर से validate
+      नहीं करना है, सिर्फ state update करनी है.
+    */
+
+    showToast(
+      "RAM profile updated: " +
+      (S.ram >= 12 ? "12 GB+" : S.ram + " GB")
+    );
+
   });
+
+}
+
+
+/* =========================================================
+   DEVICE VALIDATION
+========================================================= */
+
+function validateDevice(){
+
+  const model = deviceEl.value.trim();
+  const selectedBrand = brandEl.value;
+
+
+  /* -------------------------------------------------------
+     NO DEVICE ENTERED
+  ------------------------------------------------------- */
+
+  if(!model){
+
+    S.device = null;
+
+    deviceStatusEl.style.display = "none";
+
+    /*
+      Generic RAM options
+      क्योंकि अभी exact device नहीं चुना गया.
+    */
+    updateRamOptions(null);
+
+    continue1El.disabled = false;
+
+    return {
+      ok:true,
+      found:null
+    };
+
+  }
+
+
+  /* -------------------------------------------------------
+     FIND DEVICE
+  ------------------------------------------------------- */
+
+  const found = findDevice(model);
+
+
+  /* -------------------------------------------------------
+     DEVICE NOT FOUND
+  ------------------------------------------------------- */
+
+  if(!found){
+
+    S.device = null;
+
+    /*
+      Unknown device के लिए generic profile
+    */
+    updateRamOptions(null);
+
+    setDeviceStatus(
+      "info",
+      "ℹ️ <b>Device not in database yet.</b><br>" +
+      "TactiFF will use a generic hardware profile instead of claiming an exact match."
+    );
+
+    continue1El.disabled = false;
+
+    return {
+      ok:true,
+      found:null
+    };
+
+  }
+
+
+  /* -------------------------------------------------------
+     BRAND CHECK
+  ------------------------------------------------------- */
+
+  if(!brandCompatible(selectedBrand,found.brand)){
+
+    S.device = null;
+
+    setDeviceStatus(
+      "warn",
+      "⚠️ <b>Brand & Model mismatch</b><br>" +
+      found.name +
+      " belongs to <b>" +
+      found.brand.toUpperCase() +
+      "</b>. Please select the correct brand."
+    );
+
+    continue1El.disabled = true;
+
+    return {
+      ok:false,
+      found:found
+    };
+
+  }
+
+
+  /* =======================================================
+     EXACT DEVICE FOUND
+  ======================================================= */
+
+  S.device = found;
+
+
+  /* -------------------------------------------------------
+     AUTO RAM OPTIONS
+     
+     सबसे important upgrade:
+     Device select होते ही उसी device की RAM options आएंगी.
+     
+     Example:
+     Device:
+     POCO X6 Pro
+
+     RAM:
+     8 GB
+     12 GB
+
+     अगर database में 3GB / 4GB / 6GB है
+     तो वो भी दिखेगा.
+  ------------------------------------------------------- */
+
+  updateRamOptions(found);
+
+
+  /* -------------------------------------------------------
+     AUTO SELECT RAM
+     
+     अगर device database में default RAM है
+     तो उसे select करो.
+  ------------------------------------------------------- */
+
+  if(found.ram){
+
+    const deviceRam = Number(found.ram);
+
+    const availableRams = Array.from(
+      ramEl.options
+    ).map(option => Number(option.value));
+
+    if(availableRams.includes(deviceRam)){
+
+      ramEl.value = String(deviceRam);
+      S.ram = deviceRam;
+
+    }
+
+  }
+
+
+  /* -------------------------------------------------------
+     AUTO REFRESH RATE
+  ------------------------------------------------------- */
+
+  if(found.refresh){
+
+    S.refresh = Number(found.refresh);
+
+    document
+      .querySelectorAll("#refresh .option")
+      .forEach(x=>{
+
+        x.classList.toggle(
+          "active",
+          Number(x.dataset.value) === Number(found.refresh)
+        );
+
+      });
+
+  }
+
+
+  /* -------------------------------------------------------
+     AUTO TOUCH PROFILE
+  ------------------------------------------------------- */
+
+  if(found.touch){
+
+    S.touch = Number(found.touch);
+
+    if(touchEl){
+
+      touchEl.value = String(found.touch);
+
+      if(touchValEl){
+
+        touchValEl.textContent =
+          String(found.touch);
+
+      }
+
+    }
+
+  }
+
+
+  /* -------------------------------------------------------
+     DEVICE PERFORMANCE PROFILE
+  ------------------------------------------------------- */
+
+  if(found.performance){
+
+    S.performance =
+      Number(found.performance);
+
+  }
+
+
+  /* -------------------------------------------------------
+     DEVICE STATUS
+  ------------------------------------------------------- */
 
   setDeviceStatus(
     "ok",
@@ -2007,11 +2326,114 @@ if(found.touch){
     "/100"
   );
 
-  continue1El.disabled=false;
 
-  return {ok:true,found};
+  /* -------------------------------------------------------
+     CONTINUE ENABLE
+  ------------------------------------------------------- */
+
+  continue1El.disabled = false;
+
+
+  return {
+    ok:true,
+    found:found
+  };
 
 }
+
+
+/* =========================================================
+   DEVICE INPUT
+========================================================= */
+
+deviceEl.addEventListener("input",()=>{
+
+  renderSuggestions();
+
+  validateDevice();
+
+});
+
+
+/* =========================================================
+   BRAND CHANGE
+========================================================= */
+
+brandEl.addEventListener("change",()=>{
+
+  validateDevice();
+
+});
+
+
+/* =========================================================
+   DEVICE SUGGESTION CLICK
+========================================================= */
+
+suggestionsEl.addEventListener("click",e=>{
+
+  const item =
+    e.target.closest(".suggestion");
+
+  if(!item) return;
+
+  deviceEl.value =
+    item.dataset.model;
+
+  suggestionsEl.style.display =
+    "none";
+
+  validateDevice();
+
+});
+
+
+/* =========================================================
+   OUTSIDE CLICK
+========================================================= */
+
+document.addEventListener("click",e=>{
+
+  if(
+    !deviceEl.contains(e.target) &&
+    !suggestionsEl.contains(e.target)
+  ){
+
+    suggestionsEl.style.display =
+      "none";
+
+  }
+
+});
+
+
+/* =========================================================
+   INITIAL RAM STATE
+========================================================= */
+
+if(ramEl){
+
+  S.ram = Number(ramEl.value) || 8;
+
+}
+
+
+/* =========================================================
+   INITIAL AGE STATE
+========================================================= */
+
+if(ageEl){
+
+  S.age = Number(ageEl.value) || 0;
+
+  ageEl.addEventListener("change",()=>{
+
+    S.age = Number(ageEl.value);
+
+  });
+
+}
+```
 
 
 /* =========================================================
